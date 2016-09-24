@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		98DAB68B1D95E2F800214DDB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DAB68A1D95E2F800214DDB /* AppDelegate.swift */; };
-		98DAB68D1D95E2F800214DDB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DAB68C1D95E2F800214DDB /* ViewController.swift */; };
+		98DAB68D1D95E2F800214DDB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DAB68C1D95E2F800214DDB /* LoginViewController.swift */; };
 		98DAB6901D95E2F800214DDB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98DAB68E1D95E2F800214DDB /* Main.storyboard */; };
 		98DAB6921D95E2F800214DDB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98DAB6911D95E2F800214DDB /* Assets.xcassets */; };
 		98DAB6951D95E2F800214DDB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98DAB6931D95E2F800214DDB /* LaunchScreen.storyboard */; };
@@ -17,7 +17,7 @@
 /* Begin PBXFileReference section */
 		98DAB6871D95E2F800214DDB /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		98DAB68A1D95E2F800214DDB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		98DAB68C1D95E2F800214DDB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		98DAB68C1D95E2F800214DDB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		98DAB68F1D95E2F800214DDB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		98DAB6911D95E2F800214DDB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		98DAB6941D95E2F800214DDB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -55,7 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				98DAB68A1D95E2F800214DDB /* AppDelegate.swift */,
-				98DAB68C1D95E2F800214DDB /* ViewController.swift */,
+				98DAB68C1D95E2F800214DDB /* LoginViewController.swift */,
 				98DAB68E1D95E2F800214DDB /* Main.storyboard */,
 				98DAB6911D95E2F800214DDB /* Assets.xcassets */,
 				98DAB6931D95E2F800214DDB /* LaunchScreen.storyboard */,
@@ -96,6 +96,7 @@
 				TargetAttributes = {
 					98DAB6861D95E2F800214DDB = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 56SGSJ5YCY;
 					};
 				};
 			};
@@ -135,7 +136,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				98DAB68D1D95E2F800214DDB /* ViewController.swift in Sources */,
+				98DAB68D1D95E2F800214DDB /* LoginViewController.swift in Sources */,
 				98DAB68B1D95E2F800214DDB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -251,7 +252,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "On The Map/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jackngai.On-The-Map";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -262,7 +265,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "On The Map/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jackngai.On-The-Map";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -288,6 +293,7 @@
 				98DAB69B1D95E2F800214DDB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
