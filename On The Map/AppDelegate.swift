@@ -12,10 +12,66 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    let helper = Helper()
 
+    var locations = [[String:AnyObject]]()
+    
+    var students = [StudentInformation]()
+    
+    var user = StudentInformation()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
+        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            guard error == nil else {
+                print("Received error from dataTaskWithRequest")
+                guard let error = error else {
+                    print("Unable to safely unwrap NSERROR object")
+                    return
+                }
+                if error.code == -1009{
+                    dispatch_async(dispatch_get_main_queue()){
+                        self.helper.showAlert(error.domain, alertMessage: error.localizedDescription)
+                    }
+                }
+                return
+            }
+            
+            guard let data = data else{
+                self.helper.showAlert("Error", alertMessage: "There was an error retrieving student data.")
+                return
+            }
+            
+            var parsedResult:AnyObject!
+            do{
+                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            } catch {
+                print("Unable process JSON into foundation object")
+            }
+                self.locations = parsedResult["results"] as! [[String:AnyObject]]
+                
+                let dictionaries = parsedResult["results"] as! [[String:AnyObject]]
+                
+                for dictionary in dictionaries{
+                    let student = StudentInformation(dictionary: dictionary)
+                    self.students.append(student)
+                    
+                    // MARK: Test Code
+                    //print(student.firstName)
+                    
+                    // end test code
+                    
+                }
+            
+        }
+        task.resume()
+        
         return true
     }
 

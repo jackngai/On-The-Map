@@ -7,14 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		980C20F91DA02D5D00C3EBD0 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980C20F81DA02D5D00C3EBD0 /* NetworkClient.swift */; };
+		980C20FB1DA033C900C3EBD0 /* NetworkConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980C20FA1DA033C900C3EBD0 /* NetworkConvenience.swift */; };
+		980C20FD1DA035E100C3EBD0 /* NetworkAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980C20FC1DA035E100C3EBD0 /* NetworkAuthViewController.swift */; };
+		980CD1E81D9D576500185904 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980CD1E71D9D576500185904 /* Helper.swift */; };
+		9810A9451D976C2B00ABDF75 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9810A9441D976C2B00ABDF75 /* MapViewController.swift */; };
+		9811F8061D9EB32400F2D123 /* LocateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9811F8051D9EB32400F2D123 /* LocateViewController.swift */; };
+		9811F8081D9EBDD900F2D123 /* MapAndPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9811F8071D9EBDD900F2D123 /* MapAndPinViewController.swift */; };
+		9811F80A1D9F19AB00F2D123 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9811F8091D9F19AA00F2D123 /* Constants.swift */; };
+		98211F0C1D9AE7EE00B12066 /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98211F0B1D9AE7ED00B12066 /* ListTableViewController.swift */; };
 		98DAB68B1D95E2F800214DDB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DAB68A1D95E2F800214DDB /* AppDelegate.swift */; };
 		98DAB68D1D95E2F800214DDB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DAB68C1D95E2F800214DDB /* LoginViewController.swift */; };
 		98DAB6901D95E2F800214DDB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98DAB68E1D95E2F800214DDB /* Main.storyboard */; };
 		98DAB6921D95E2F800214DDB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98DAB6911D95E2F800214DDB /* Assets.xcassets */; };
 		98DAB6951D95E2F800214DDB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98DAB6931D95E2F800214DDB /* LaunchScreen.storyboard */; };
+		98E6F9531D9C6A510093375F /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6F9521D9C6A510093375F /* GCDBlackBox.swift */; };
+		98E6F9551D9C6DEA0093375F /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6F9541D9C6DEA0093375F /* StudentInformation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		980C20F81DA02D5D00C3EBD0 /* NetworkClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
+		980C20FA1DA033C900C3EBD0 /* NetworkConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkConvenience.swift; sourceTree = "<group>"; };
+		980C20FC1DA035E100C3EBD0 /* NetworkAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkAuthViewController.swift; sourceTree = "<group>"; };
+		980CD1E71D9D576500185904 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		9810A9441D976C2B00ABDF75 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		9811F8051D9EB32400F2D123 /* LocateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocateViewController.swift; sourceTree = "<group>"; };
+		9811F8071D9EBDD900F2D123 /* MapAndPinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAndPinViewController.swift; sourceTree = "<group>"; };
+		9811F8091D9F19AA00F2D123 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		98211F0B1D9AE7ED00B12066 /* ListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
 		98DAB6871D95E2F800214DDB /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		98DAB68A1D95E2F800214DDB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		98DAB68C1D95E2F800214DDB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +42,8 @@
 		98DAB6911D95E2F800214DDB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		98DAB6941D95E2F800214DDB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		98DAB6961D95E2F800214DDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		98E6F9521D9C6A510093375F /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
+		98E6F9541D9C6DEA0093375F /* StudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +57,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		980C20F51DA02CDA00C3EBD0 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				98211F0B1D9AE7ED00B12066 /* ListTableViewController.swift */,
+				9811F8051D9EB32400F2D123 /* LocateViewController.swift */,
+				98DAB68C1D95E2F800214DDB /* LoginViewController.swift */,
+				9811F8071D9EBDD900F2D123 /* MapAndPinViewController.swift */,
+				9810A9441D976C2B00ABDF75 /* MapViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		980C20F61DA02D0000C3EBD0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				98DAB68A1D95E2F800214DDB /* AppDelegate.swift */,
+				9811F8091D9F19AA00F2D123 /* Constants.swift */,
+				98E6F9521D9C6A510093375F /* GCDBlackBox.swift */,
+				980CD1E71D9D576500185904 /* Helper.swift */,
+				980C20FA1DA033C900C3EBD0 /* NetworkConvenience.swift */,
+				980C20F81DA02D5D00C3EBD0 /* NetworkClient.swift */,
+				980C20FC1DA035E100C3EBD0 /* NetworkAuthViewController.swift */,
+				98E6F9541D9C6DEA0093375F /* StudentInformation.swift */,
+				98DAB6961D95E2F800214DDB /* Info.plist */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		980C20F71DA02D2400C3EBD0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				98DAB6911D95E2F800214DDB /* Assets.xcassets */,
+				98DAB6931D95E2F800214DDB /* LaunchScreen.storyboard */,
+				98DAB68E1D95E2F800214DDB /* Main.storyboard */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
 		98DAB67E1D95E2F800214DDB = {
 			isa = PBXGroup;
 			children = (
@@ -54,12 +114,9 @@
 		98DAB6891D95E2F800214DDB /* On The Map */ = {
 			isa = PBXGroup;
 			children = (
-				98DAB68A1D95E2F800214DDB /* AppDelegate.swift */,
-				98DAB68C1D95E2F800214DDB /* LoginViewController.swift */,
-				98DAB68E1D95E2F800214DDB /* Main.storyboard */,
-				98DAB6911D95E2F800214DDB /* Assets.xcassets */,
-				98DAB6931D95E2F800214DDB /* LaunchScreen.storyboard */,
-				98DAB6961D95E2F800214DDB /* Info.plist */,
+				980C20F61DA02D0000C3EBD0 /* Model */,
+				980C20F71DA02D2400C3EBD0 /* View */,
+				980C20F51DA02CDA00C3EBD0 /* Controller */,
 			);
 			path = "On The Map";
 			sourceTree = "<group>";
@@ -137,7 +194,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				98DAB68D1D95E2F800214DDB /* LoginViewController.swift in Sources */,
+				980CD1E81D9D576500185904 /* Helper.swift in Sources */,
+				980C20FB1DA033C900C3EBD0 /* NetworkConvenience.swift in Sources */,
+				9810A9451D976C2B00ABDF75 /* MapViewController.swift in Sources */,
+				980C20F91DA02D5D00C3EBD0 /* NetworkClient.swift in Sources */,
+				9811F8081D9EBDD900F2D123 /* MapAndPinViewController.swift in Sources */,
 				98DAB68B1D95E2F800214DDB /* AppDelegate.swift in Sources */,
+				9811F80A1D9F19AB00F2D123 /* Constants.swift in Sources */,
+				98211F0C1D9AE7EE00B12066 /* ListTableViewController.swift in Sources */,
+				98E6F9551D9C6DEA0093375F /* StudentInformation.swift in Sources */,
+				980C20FD1DA035E100C3EBD0 /* NetworkAuthViewController.swift in Sources */,
+				98E6F9531D9C6A510093375F /* GCDBlackBox.swift in Sources */,
+				9811F8061D9EB32400F2D123 /* LocateViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
