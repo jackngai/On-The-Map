@@ -52,7 +52,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         let object = UIApplication.sharedApplication().delegate
         let appDelegate = object as! AppDelegate
-        //let locations = appDelegate.locations
         let students = appDelegate.students
         
         
@@ -89,6 +88,74 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         self.mapView.addAnnotations(annotations)
         
         mapView.delegate = self
+        
+        // After the map is displayed, check if user posted any pins by using 
+        // https://parse.udacity.com/parse/classes/StudentLocation?where={"uniqueKey":"1234"}
+        
+        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22uniqueKey%22%3A%22" + appDelegate.user.uniqueKey + "%22%7D"
+        let url = NSURL(string: urlString)
+        let request = NSMutableURLRequest(URL: url!)
+        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil { // Handle error
+                return
+            }
+            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+            
+            
+ 
+            guard error == nil else {
+                print("Received error from dataTaskWithRequest")
+                guard let error = error else {
+                    print("Unable to safely unwrap NSERROR object")
+                    return
+                }
+                if error.code == -1009{
+                    dispatch_async(dispatch_get_main_queue()){
+                        self.showAlert(error.domain, alertMessage: error.localizedDescription)
+                    }
+                }
+                return
+            }
+            
+            guard let data = data else{
+                self.showAlert("Error", alertMessage: "There was an error retrieving student data.")
+                return
+            }
+            
+            var parsedResult:AnyObject!
+            do{
+                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            } catch {
+                print("Unable process JSON into foundation object")
+            }
+            
+            let dictionaries = parsedResult["results"] as! [[String:AnyObject]]
+            
+            let lastEntry = dictionaries[dictionaries.endIndex - 1]
+            
+            appDelegate.user.objectID = lastEntry["objectId"] as! String
+            
+//            for dictionary in dictionaries{
+//                let student = StudentInformation(dictionary: dictionary)
+//                self.students.append(student)
+//                
+//                // MARK: Test Code
+//                //print(student.firstName)
+//                
+//                // end test code
+//                
+//            }
+
+             
+ 
+            
+            
+        }
+        task.resume()
+        
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -99,6 +166,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func logOut(sender: UIBarButtonItem) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    private func showAlert(alertTitle: String, alertMessage: String){
+        let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .Alert)
+        let action = UIAlertAction(title: "Okay", style: .Default, handler: nil)
+        alertController.addAction(action)
+        presentViewController(alertController, animated: true, completion: nil)
     }
     
     

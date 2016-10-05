@@ -28,26 +28,40 @@ class LocateViewController:UIViewController{
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-                // Check if a pin exists for the current session, if it does, cancel
-                let object = UIApplication.sharedApplication().delegate
-                let appDelegate = object as! AppDelegate
-        //let user = appDelegate.user
-        //      let students = appDelegate.students
+        // MARK: Test Code
         
-                for student in (UIApplication.sharedApplication().delegate as! AppDelegate).students{
-
-                    if student.uniqueKey == appDelegate.user.uniqueKey {
-                        let alertController = UIAlertController(title: nil, message: "You Have Already Posted a Student Location. Would You Like to Overwrite Your Current Location?", preferredStyle: .Alert)
-                        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action:UIAlertAction) in
-                            self.dismissViewControllerAnimated(true, completion: nil)
-                        })
+        // Check if a pin exists for the current session, if it does, cancel
         
-                        alertController.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: nil))
-                        alertController.addAction(cancelAction)
+//        for student in (UIApplication.sharedApplication().delegate as! AppDelegate).students{
+//            
+//            if student.uniqueKey == (UIApplication.sharedApplication().delegate as! AppDelegate).user.uniqueKey {
+//                let alertController = UIAlertController(title: nil, message: "You Have Already Posted a Student Location. Would You Like to Overwrite Your Current Location?", preferredStyle: .Alert)
+//                let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action:UIAlertAction) in
+//                    self.dismissViewControllerAnimated(true, completion: nil)
+//                })
+//                
+//                alertController.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: nil))
+//                alertController.addAction(cancelAction)
+//                
+//                self.presentViewController(alertController, animated: true, completion: nil)
+//            }
+//        }
         
-                        self.presentViewController(alertController, animated: true, completion: nil)
-                    }
-                }
+        if (UIApplication.sharedApplication().delegate as! AppDelegate).user.objectID != ""{
+            let alertController = UIAlertController(title: nil, message: "You Have Already Posted a Student Location. Would You Like to Overwrite Your Current Location?", preferredStyle: .Alert)
+            let newPinAction = UIAlertAction(title: "Add New", style: .Cancel, handler: { (action:UIAlertAction) in
+                (UIApplication.sharedApplication().delegate as! AppDelegate).user.objectID = ""
+            })
+            
+            alertController.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: nil))
+            alertController.addAction(newPinAction)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+            
+            
+        }
+        
+        // end test code
     }
     
     
