@@ -10,8 +10,6 @@ import Foundation
 
 struct Constants{
     
-
-    
     // MARK: Parameter Keys
     struct ParameterKeys {
         static let ApiKey = "api_key"
@@ -33,22 +31,6 @@ struct Constants{
         // MARK: Account
         static let UserID = "id"
         
-        // MARK: Config
-        static let ConfigBaseImageURL = "base_url"
-        static let ConfigSecureBaseImageURL = "secure_base_url"
-        static let ConfigImages = "images"
-        static let ConfigPosterSizes = "poster_sizes"
-        static let ConfigProfileSizes = "profile_sizes"
-        
-        // MARK: Movies
-        static let MovieID = "id"
-        static let MovieTitle = "title"
-        static let MoviePosterPath = "poster_path"
-        static let MovieReleaseDate = "release_date"
-        static let MovieReleaseYear = "release_year"
-        static let MovieResults = "results"
-        static let MovieRating = "vote_average"
-        
     }
 
     
@@ -56,9 +38,10 @@ struct Constants{
         static let appID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
         static let APIkey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
         
-        struct Methods{
-            static let baseURL = "https://parse.udacity.com/parse/classes/StudentLocation"
-        }
+        // MARK: Parse URLs
+        static let ApiScheme = "https"
+        static let ApiHost = "parse.udacity.com"
+        static let ApiPath = "/parse/classes/StudentLocation"
         
         struct ParameterKeys {
             static let limit = "limit"
@@ -69,13 +52,14 @@ struct Constants{
     }
     
     struct Udacity{
-        static let sessionMethod = "/session"
-        static let userinfoMethod = "/users/"
+        struct Methods{
+            static let sessionMethod = "/api/session"
+            static let userinfoMethod = "/api/users/"
+        }
         
         // MARK: Udacity URLs
         static let ApiScheme = "https"
         static let ApiHost = "www.udacity.com"
-        static let ApiPath = "/api"
         
         struct ParameterKeys {
             static let udacity = "udacity"
@@ -85,27 +69,5 @@ struct Constants{
         
 
     }
-    
-}
-
-// MARK: Methods
-struct Methods {
-    
-    // MARK: Account
-    static let Account = "/account"
-    static let AccountIDFavoriteMovies = "/account/{id}/favorite/movies"
-    static let AccountIDFavorite = "/account/{id}/favorite"
-    static let AccountIDWatchlistMovies = "/account/{id}/watchlist/movies"
-    static let AccountIDWatchlist = "/account/{id}/watchlist"
-    
-    // MARK: Authentication
-    static let AuthenticationTokenNew = "/authentication/token/new"
-    static let AuthenticationSessionNew = "/authentication/session/new"
-    
-    // MARK: Search
-    static let SearchMovie = "/search/movie"
-    
-    // MARK: Config
-    static let Config = "/configuration"
     
 }

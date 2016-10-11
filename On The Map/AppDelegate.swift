@@ -14,15 +14,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     let helper = Helper()
-
-    var locations = [[String:AnyObject]]()
     
     var students = [StudentInformation]()
-    
-    var user = StudentInformation()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        
+         var parameters = [String:AnyObject]()
+         
+         parameters[Constants.Parse.ParameterKeys.limit] = 100 as AnyObject
+         parameters[Constants.Parse.ParameterKeys.order] = "-updatedAt" as AnyObject
+         
+         let getStudentsLocationRequest = NetworkClient.sharedInstance().parseGet(parameters)
+        
+        NetworkClient.sharedInstance().startTask("Parse", request: getStudentsLocationRequest) { (result, error) in
+            
+            let dictionaries = result["results"] as! [[String:AnyObject]]
+            
+            for dictionary in dictionaries{
+                let student = StudentInformation(dictionary: dictionary)
+                self.students.append(student)
+                
+                // MARK: Test Code
+                //print(student.firstName)
+                
+                // end test code
+                
+            }
+        }
+ 
+        /*
+        // MARK: Old code
         
         let request = NSMutableURLRequest(URL: NSURL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
@@ -71,7 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         }
         task.resume()
-        
+        */
         return true
     }
 

@@ -13,7 +13,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var emailField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
-    let helper = Helper()
+    //let helper = Helper()
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -36,26 +36,13 @@ class LoginViewController: UIViewController {
 //            return
 //        }
 
-        getSessionID()
+        completeLogin()
         
         //Skipping login authentication as that works
         
         
         //Go straight to map, delete this in final version
         //performSegueWithIdentifier("segueToMap", sender: self)
-        
-        
-        //MARK: The Movie Manager way
-   
-//        NetworkClient.sharedInstance().authenticateWithViewController(self) { (success, errorString) in
-//            performUIUpdatesOnMain {
-//                if success {
-//                    self.performSegueWithIdentifier("segueToMap", sender: self)
-//                } else {
-//                    print(errorString)
-//                }
-//            }
-//        }
  
     }
     
@@ -70,52 +57,131 @@ class LoginViewController: UIViewController {
     
     private func checkFields()->Bool{
         guard let email = emailField.text where email.containsString("@") && email.containsString(".") else {
-            helper.showAlert("Invalid Email", alertMessage: "Please enter a valid email address")
+            Helper.showAlert("Invalid Email", alertMessage: "Please enter a valid email address")
             return false
         }
         guard passwordField.text != "" else {
-            helper.showAlert("Invalid Password", alertMessage: "Password is missing")
+            Helper.showAlert("Invalid Password", alertMessage: "Password is missing")
             return false
         }
 
         return true
     }
     
-    private func getSessionID(){
+    private func completeLogin(){
         
-        // MARK: MVC way
+        // MARK: Auth with Udacity POST API
         
-//        var dictionary = [String:AnyObject]()
-//        
-//        dictionary[Constants.Udacity.ParameterKeys.user] = emailField.text!
-//        dictionary[Constants.Udacity.ParameterKeys.pw] = passwordField.text!
-//        
-//        let jsonbody = "{\"udacity\": {\(dictionary)}}"
-//            
-//            //let jsonBody = "{\"\(TMDBClient.JSONBodyKeys.MediaType)\": \"movie\",\"\(TMDBClient.JSONBodyKeys.MediaID)\": \"\(movie.id)\",\"\(TMDBClient.JSONBodyKeys.Watchlist)\": \(watchlist)}"
-//        
-//         NetworkClient.sharedInstance().taskForPOSTMethod(Constants.Udacity.sessionMethod, parameters: dictionary, jsonBody: jsonbody) { (result, error) in
-//            if error != nil{
-//                print(error)
-//                //completionHandlerForWatchlist(result: nil, error: error)
-//            } else {
-//                /* 3. Send the desired value(s) to completion handler */
-//                if let statusCode = result["status_code"] as? Int {
-//                    print(statusCode)
-//                    //completionHandlerForWatchlist(result: statusCode, error: nil)
-//                } else {
-//                    //completionHandlerForWatchlist(result: nil, error: error)
-//                }
-//            }
-//        }
+        guard let username = emailField.text, let password = passwordField.text else{
+            print("Unable to unwrap email and/or password field")
+            return
+        }
         
-        // Original code (code from example)
+        let authenticationRequest = NetworkClient.sharedInstance().udacityPOST(username, password: password)
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
+        NetworkClient.sharedInstance().startTask("Udacity", request: authenticationRequest) { (result, error) in
+            
+            guard let accountInfo = result["account"], let optionalKey = accountInfo?["key"], let key = optionalKey as? String else {
+                print("Unable to retrieve key from parsed result.")
+                return
+            }
+            
+            NetworkClient.sharedInstance().user.uniqueKey = key
+            
+            print("Error is: \(error)")
+            
+            let getUserPublicInfoRequest = NetworkClient.sharedInstance().udacityGET()
+            
+            NetworkClient.sharedInstance().startTask("Udacity", request: getUserPublicInfoRequest, completionHandlerForTask: { (result, error) in
+                guard let user = result?["user"], let firstname = user?["first_name"] as? String, let lastname = user?["last_name"] as? String else{
+                    print("Unable to find user info in parsed result.")
+                    return
+                }
+                NetworkClient.sharedInstance().user.firstName = firstname
+                NetworkClient.sharedInstance().user.lastName = lastname
+            })
+            
+            performUIUpdatesOnMain{
+                self.performSegueWithIdentifier("segueToMap", sender: self)
+            }
+            
+        }
+        
+        /*
+        
+        // MARK: Old code
+    
+        let parameters = [String:AnyObject]()
+        
+        let jsonBody = "{\"udacity\": {\"username\": \"\(emailField.text!)\", \"password\": \"\(passwordField.text!)\"}}"
+        
+        
+        
+        NetworkClient.sharedInstance().taskForPOSTMethod(Constants.Udacity.Methods.sessionMethod, parameters: parameters, jsonBody: jsonBody, scheme: Constants.Udacity.ApiScheme, host: Constants.Udacity.ApiHost, path: Constants.Udacity.Methods.sessionMethod) { (result, error) in
+            //print(result)
+            
+            guard let accountInfo = result["account"], let optionalKey = accountInfo?["key"], let key = optionalKey as? String else {
+                print("Unable to retrieve key from parsed result.")
+                return
+            }
+            
+            NetworkClient.sharedInstance().user.uniqueKey = key
+            
+            print("Error is: \(error)")
+            
+            
+            
+            
+            // MARK: old code
+            
+            //(UIApplication.sharedApplication().delegate as! AppDelegate).user.uniqueKey = key
+            
+            // end old code
+            
+            NetworkClient.sharedInstance().user.uniqueKey = key
+            
+            // MARK: Test Code
+            
+            //NetworkClient.sharedInstance().sessionID = key
+            
+            // end test code
+            
+            
+            print("Error is: \(error)")
+            
+            
+            // MARK: Get user public data with Udacity GET API
+            
+            NetworkClient.sharedInstance().taskForGETMethod(Constants.Udacity.Methods.userinfoMethod, parameters: parameters, scheme: Constants.Udacity.ApiScheme, host: Constants.Udacity.ApiHost,  path: Constants.Udacity.Methods.sessionMethod, completionHandlerForGET: { (result, error) in
+                
+                guard let user = result["user"], let firstname = user?["first_name"] as? String, let lastname = user?["last_name"] as? String else{
+                    print("Unable to find user info in parsed result.")
+                    return
+                }
+                
+                NetworkClient.sharedInstance().user.firstName = firstname
+                NetworkClient.sharedInstance().user.lastName = lastname
+                
+            })
+            
+            performUIUpdatesOnMain{
+                self.performSegueWithIdentifier("segueToMap", sender: self)
+            }
+            
+        
+        }
+ 
+        */
+        
+        /*
+        
+        // MARK: Old code - Auth with Udacity POST API
+        
+        let request = NSMutableURLRequest(URL: NetworkClient.sharedInstance().networkURLFromParameters(parameters, withPathExtension: Constants.Udacity.Methods.sessionMethod, scheme: Constants.Udacity.ApiScheme, host: Constants.Udacity.ApiHost, path: Constants.Udacity.ApiPath))
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-    
+        
         request.HTTPBody = "{\"udacity\": {\"username\": \"\(emailField.text!)\", \"password\": \"\(passwordField.text!)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
         
         // MARK: Test Code - Decode HTTPBody to make sure everything looks good
@@ -152,15 +218,16 @@ class LoginViewController: UIViewController {
                 if (response as? NSHTTPURLResponse)?.statusCode == 403{
                     dispatch_async(dispatch_get_main_queue(), {
                         // MARK: Test code
-//                        let newData = data?.subdataWithRange(NSMakeRange(5, data!.length - 5))
-//                        print(NSString(data: newData!, encoding: NSUTF8StringEncoding)!)
+                        //                        let newData = data?.subdataWithRange(NSMakeRange(5, data!.length - 5))
+                        //                        print(NSString(data: newData!, encoding: NSUTF8StringEncoding)!)
                         
                         //end test code
                         self.showAlert("Invalid Credentials", alertMessage: "Please check your username or password")
-                      
+                        
                     })
                 }
-                    return
+                print((response as? NSHTTPURLResponse)?.statusCode)
+                return
                 
             }
             
@@ -190,7 +257,13 @@ class LoginViewController: UIViewController {
             // print(key)
             // end test code
             
-            (UIApplication.sharedApplication().delegate as! AppDelegate).user.uniqueKey = key
+            // MARK: old code
+            
+            //(UIApplication.sharedApplication().delegate as! AppDelegate).user.uniqueKey = key
+            
+            // end old code
+            
+            NetworkClient.sharedInstance().user.uniqueKey = key
             
 
             
@@ -200,6 +273,8 @@ class LoginViewController: UIViewController {
             // print("http://www.udacity.com/api/users/" + key)
             // end test code
 
+            
+            // MARK: Old code - Get user public data with Udacity GET API
             
             let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/" + key)!)
             let session = NSURLSession.sharedSession()
@@ -234,10 +309,15 @@ class LoginViewController: UIViewController {
                 
                 //end test code
                 
+                // MARK: Old code
+                /*
+                
                 (UIApplication.sharedApplication().delegate as! AppDelegate).user.firstName = firstname
                 (UIApplication.sharedApplication().delegate as! AppDelegate).user.lastName = lastname
+                */
                 
-                
+                NetworkClient.sharedInstance().user.firstName = firstname
+                NetworkClient.sharedInstance().user.lastName = lastname
 
                 
             }
@@ -256,8 +336,9 @@ class LoginViewController: UIViewController {
 
         
         return
+    */
         
     }
-    
+
 }
 

@@ -47,10 +47,10 @@ class LocateViewController:UIViewController{
 //            }
 //        }
         
-        if (UIApplication.sharedApplication().delegate as! AppDelegate).user.objectID != ""{
+        if NetworkClient.sharedInstance().user.objectID != ""{
             let alertController = UIAlertController(title: nil, message: "You Have Already Posted a Student Location. Would You Like to Overwrite Your Current Location?", preferredStyle: .Alert)
             let newPinAction = UIAlertAction(title: "Add New", style: .Cancel, handler: { (action:UIAlertAction) in
-                (UIApplication.sharedApplication().delegate as! AppDelegate).user.objectID = ""
+                NetworkClient.sharedInstance().user.objectID = ""
             })
             
             alertController.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: nil))
@@ -79,7 +79,7 @@ class LocateViewController:UIViewController{
             print("location field is nil")
             return
         }
-        (UIApplication.sharedApplication().delegate as! AppDelegate).user.mapString = location
+        NetworkClient.sharedInstance().user.mapString = location
         
         searchRequest = MKLocalSearchRequest()
         searchRequest.naturalLanguageQuery = locationTextField.text

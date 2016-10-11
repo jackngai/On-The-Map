@@ -91,8 +91,29 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         // After the map is displayed, check if user posted any pins by using 
         // https://parse.udacity.com/parse/classes/StudentLocation?where={"uniqueKey":"1234"}
+        // Save the ObjectID from response to the user.objectId field
+
         
-        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22uniqueKey%22%3A%22" + appDelegate.user.uniqueKey + "%22%7D"
+        var parameters = [String:AnyObject]()
+        
+        let dictionary = ["uniqueKey":NetworkClient.sharedInstance().user.uniqueKey]
+        
+        parameters[Constants.Parse.ParameterKeys.Where] = dictionary as AnyObject
+        
+        let getObjectIDRequest = NetworkClient.sharedInstance().parseGet(parameters)
+        
+        NetworkClient.sharedInstance().startTask("Parse", request: getObjectIDRequest) { (result, error) in
+            
+            let dictionaries = result["results"] as! [[String:AnyObject]]
+            
+            let lastEntry = dictionaries[dictionaries.endIndex - 1]
+            
+            NetworkClient.sharedInstance().user.objectID = lastEntry["objectId"] as! String
+        }
+        /*
+        // MARK: Old code
+        
+        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22uniqueKey%22%3A%22" + NetworkClient.sharedInstance().user.uniqueKey + "%22%7D"
         let url = NSURL(string: urlString)
         let request = NSMutableURLRequest(URL: url!)
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
@@ -155,6 +176,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
         }
         task.resume()
+        */
         
     }
     

@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		980C20F91DA02D5D00C3EBD0 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980C20F81DA02D5D00C3EBD0 /* NetworkClient.swift */; };
-		980C20FB1DA033C900C3EBD0 /* NetworkConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980C20FA1DA033C900C3EBD0 /* NetworkConvenience.swift */; };
-		980C20FD1DA035E100C3EBD0 /* NetworkAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980C20FC1DA035E100C3EBD0 /* NetworkAuthViewController.swift */; };
 		980CD1E81D9D576500185904 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980CD1E71D9D576500185904 /* Helper.swift */; };
 		9810A9451D976C2B00ABDF75 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9810A9441D976C2B00ABDF75 /* MapViewController.swift */; };
 		9811F8061D9EB32400F2D123 /* LocateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9811F8051D9EB32400F2D123 /* LocateViewController.swift */; };
@@ -27,8 +25,6 @@
 
 /* Begin PBXFileReference section */
 		980C20F81DA02D5D00C3EBD0 /* NetworkClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
-		980C20FA1DA033C900C3EBD0 /* NetworkConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkConvenience.swift; sourceTree = "<group>"; };
-		980C20FC1DA035E100C3EBD0 /* NetworkAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkAuthViewController.swift; sourceTree = "<group>"; };
 		980CD1E71D9D576500185904 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		9810A9441D976C2B00ABDF75 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9811F8051D9EB32400F2D123 /* LocateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocateViewController.swift; sourceTree = "<group>"; };
@@ -76,9 +72,7 @@
 				9811F8091D9F19AA00F2D123 /* Constants.swift */,
 				98E6F9521D9C6A510093375F /* GCDBlackBox.swift */,
 				980CD1E71D9D576500185904 /* Helper.swift */,
-				980C20FA1DA033C900C3EBD0 /* NetworkConvenience.swift */,
 				980C20F81DA02D5D00C3EBD0 /* NetworkClient.swift */,
-				980C20FC1DA035E100C3EBD0 /* NetworkAuthViewController.swift */,
 				98E6F9541D9C6DEA0093375F /* StudentInformation.swift */,
 				98DAB6961D95E2F800214DDB /* Info.plist */,
 			);
@@ -195,7 +189,6 @@
 			files = (
 				98DAB68D1D95E2F800214DDB /* LoginViewController.swift in Sources */,
 				980CD1E81D9D576500185904 /* Helper.swift in Sources */,
-				980C20FB1DA033C900C3EBD0 /* NetworkConvenience.swift in Sources */,
 				9810A9451D976C2B00ABDF75 /* MapViewController.swift in Sources */,
 				980C20F91DA02D5D00C3EBD0 /* NetworkClient.swift in Sources */,
 				9811F8081D9EBDD900F2D123 /* MapAndPinViewController.swift in Sources */,
@@ -203,7 +196,6 @@
 				9811F80A1D9F19AB00F2D123 /* Constants.swift in Sources */,
 				98211F0C1D9AE7EE00B12066 /* ListTableViewController.swift in Sources */,
 				98E6F9551D9C6DEA0093375F /* StudentInformation.swift in Sources */,
-				980C20FD1DA035E100C3EBD0 /* NetworkAuthViewController.swift in Sources */,
 				98E6F9531D9C6A510093375F /* GCDBlackBox.swift in Sources */,
 				9811F8061D9EB32400F2D123 /* LocateViewController.swift in Sources */,
 			);

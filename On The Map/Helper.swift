@@ -9,10 +9,22 @@
 import UIKit
 
 class Helper:UIViewController{
-    func showAlert(alertTitle: String, alertMessage: String){
-        let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .Alert)
+    
+    internal static var alertController:UIAlertController!
+    
+    internal static func showAlert(alertTitle: String, alertMessage: String){
+        alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .Alert)
         let action = UIAlertAction(title: "Okay", style: .Default, handler: nil)
         alertController.addAction(action)
-        presentViewController(alertController, animated: true, completion: nil)
+        //self.presentViewController(alertController, animated: true, completion: nil)
+        if let controller = UIApplication.sharedApplication().keyWindow?.rootViewController?.presentedViewController{
+            controller.presentViewController(Helper.alertController, animated: true, completion: nil)
+        } else {
+            if let window = UIApplication.sharedApplication().delegate?.window{
+            window?.rootViewController?.presentViewController(Helper.alertController, animated: true, completion: nil)
+            
+                // UIApplication.sharedApplication().delegate?.window!!.rootViewController?.presentViewController(Helper.alertController, animated: true, completion: nil)
+            }
+        }
     }
 }

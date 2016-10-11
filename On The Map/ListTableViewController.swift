@@ -28,6 +28,23 @@ class ListTableViewController: UITableViewController {
     }
 
     @IBAction func logOut(sender: UIBarButtonItem) {
+        
+        let deleteCookieRequest = NetworkClient.sharedInstance().udacityDelete()
+        
+        NetworkClient.sharedInstance().startTask("Udacity", request: deleteCookieRequest) { (result, error) in
+            guard let result = result else {
+                print("unable to unwrap result")
+                return
+            }
+            guard let error = error else {
+                print("unable to unwrap error")
+                return
+            }
+            print(result)
+            print(error)
+        }
+        /*
+        // MARK: Old code
         let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
         request.HTTPMethod = "DELETE"
         var xsrfCookie: NSHTTPCookie? = nil
@@ -47,7 +64,7 @@ class ListTableViewController: UITableViewController {
             print(NSString(data: newData!, encoding: NSUTF8StringEncoding)!)
         }
         task.resume()
-        
+        */
         dismissViewControllerAnimated(true, completion: nil)
     }
     

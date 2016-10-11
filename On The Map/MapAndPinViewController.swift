@@ -15,7 +15,7 @@ class MapAndPinViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
-    var user = (UIApplication.sharedApplication().delegate as! AppDelegate).user
+    //var user = (UIApplication.sharedApplication().delegate as! AppDelegate).user
     
     var searchResponse:MKLocalSearchResponse!
     var pointAnnotation:MKPointAnnotation!
@@ -49,7 +49,35 @@ class MapAndPinViewController: UIViewController {
             return
         }
         
-        if (UIApplication.sharedApplication().delegate as! AppDelegate).user.objectID != ""{
+        NetworkClient.sharedInstance().user.latitude = searchResponse!.boundingRegion.center.latitude
+        NetworkClient.sharedInstance().user.longitude = searchResponse!.boundingRegion.center.longitude
+        NetworkClient.sharedInstance().user.mediaURL = link
+        
+        // Add new entry to the array
+        (UIApplication.sharedApplication().delegate as! AppDelegate).students[0] = NetworkClient.sharedInstance().user
+        
+        if NetworkClient.sharedInstance().user.objectID != ""{
+            
+            let overwriteRequest = NetworkClient.sharedInstance().parsePutOrPost("PUT", link: link, latitude: searchResponse!.boundingRegion.center.latitude, longitude: searchResponse!.boundingRegion.center.longitude)
+            
+            NetworkClient.sharedInstance().startTask("Parse", request: overwriteRequest, completionHandlerForTask: { (result, error) in
+                guard let result = result else{
+                    print("result is nil")
+                    return
+                }
+                guard let error = error else{
+                    print("error is nil")
+                    return
+                }
+                print(result)
+                print(error)
+            })
+            
+
+            
+            /*
+            // MARK: Old code
+            
             let urlString = "https://parse.udacity.com/parse/classes/StudentLocation/" + user.objectID
             let url = NSURL(string: urlString)
             let request = NSMutableURLRequest(URL: url!)
@@ -59,6 +87,7 @@ class MapAndPinViewController: UIViewController {
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             
             request.HTTPBody = "{\"uniqueKey\": \"\(user.uniqueKey)\", \"firstName\": \"\(user.firstName)\", \"lastName\": \"\(user.lastName)\",\"mapString\": \"\(user.mapString)\", \"mediaURL\": \"\(link)\" ,\"latitude\": \(searchResponse!.boundingRegion.center.latitude), \"longitude\": \(searchResponse!.boundingRegion.center.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
+    
             
             user.latitude = searchResponse!.boundingRegion.center.latitude
             user.longitude = searchResponse!.boundingRegion.center.longitude
@@ -89,22 +118,37 @@ class MapAndPinViewController: UIViewController {
             
             //(UIApplication.sharedApplication().delegate as! AppDelegate).students.insert(user, atIndex: 0)
             (UIApplication.sharedApplication().delegate as! AppDelegate).students[0] = user
+ 
+        */
             
         } else {
+            
+            
+            let addNewLocationRequest = NetworkClient.sharedInstance().parsePutOrPost("POST", link: link, latitude: searchResponse!.boundingRegion.center.latitude, longitude: searchResponse!.boundingRegion.center.longitude)
+            
+            NetworkClient.sharedInstance().startTask("Parse", request: addNewLocationRequest, completionHandlerForTask: { (result, error) in
+                guard let result = result else{
+                    print("result is nil")
+                    return
+                }
+                guard let error = error else{
+                    print("error is nil")
+                    return
+                }
+                print(result)
+                print(error)
+            })
+            
+            /*
+            // MARK: Old code
+            
             let request = NSMutableURLRequest(URL: NSURL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
             request.HTTPMethod = "POST"
             request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
             request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            // request.HTTPBody = "{\"uniqueKey\": \"\(user.uniqueKey)\", \"firstName\": \"Jack\", \"lastName\": \"Ngai\",\"mapString\": \"Mountain View, CA\", \"mediaURL\": \"\(link)\" ,\"latitude\": \(searchResponse!.boundingRegion.center.latitude), \"longitude\": \(searchResponse!.boundingRegion.center.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
-            
-            
+
             request.HTTPBody = "{\"uniqueKey\": \"\(user.uniqueKey)\", \"firstName\": \"\(user.firstName)\", \"lastName\": \"\(user.lastName)\",\"mapString\": \"\(user.mapString)\", \"mediaURL\": \"\(link)\" ,\"latitude\": \(searchResponse!.boundingRegion.center.latitude), \"longitude\": \(searchResponse!.boundingRegion.center.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
-            
-            user.latitude = searchResponse!.boundingRegion.center.latitude
-            user.longitude = searchResponse!.boundingRegion.center.longitude
-            user.mediaURL = link
             
             
             let session = NSURLSession.sharedSession()
@@ -122,6 +166,8 @@ class MapAndPinViewController: UIViewController {
                 
             }
             task.resume()
+ 
+ 
             
             // MARK: Test code
             
@@ -129,9 +175,8 @@ class MapAndPinViewController: UIViewController {
             //print((UIApplication.sharedApplication().delegate as! AppDelegate).students)
             
             //end test code
-            
-            (UIApplication.sharedApplication().delegate as! AppDelegate).students.insert(user, atIndex: 0)
 
+            */
         }
         
         performSegueWithIdentifier("unwind", sender: self)
@@ -143,15 +188,5 @@ class MapAndPinViewController: UIViewController {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
