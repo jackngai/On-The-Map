@@ -73,9 +73,16 @@
                                     <action selector="tappedLoginButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Xuw-Fb-1jy"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="udacity" translatesAutoresizingMaskIntoConstraints="NO" id="3Cw-No-fP9">
-                                <rect key="frame" x="180" y="36" width="256" height="256"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="240" placeholderIntrinsicHeight="240" image="udacity" translatesAutoresizingMaskIntoConstraints="NO" id="3Cw-No-fP9">
+                                <rect key="frame" x="188" y="40" width="240" height="240"/>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KoA-fO-TVq" customClass="FBSDKLoginButton">
+                                <rect key="frame" x="20" y="540" width="560" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="uGC-FE-frW"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.2261761427" green="0.70265072579999999" blue="0.89283072949999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -83,21 +90,31 @@
                             <constraint firstItem="aT1-6j-Mfy" firstAttribute="leading" secondItem="e0R-Kt-VkC" secondAttribute="leading" id="0XC-8a-OeU"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="qmL-fu-Pma" secondAttribute="bottom" constant="93" id="1kd-go-wzf"/>
                             <constraint firstItem="aT1-6j-Mfy" firstAttribute="top" secondItem="TpK-qk-w6n" secondAttribute="bottom" constant="14" id="25D-ri-5fA"/>
+                            <constraint firstItem="KoA-fO-TVq" firstAttribute="trailing" secondItem="A49-2u-z29" secondAttribute="trailing" id="DpU-N8-zmb"/>
                             <constraint firstItem="aT1-6j-Mfy" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="G37-uf-h1u"/>
+                            <constraint firstItem="TpK-qk-w6n" firstAttribute="top" secondItem="3Cw-No-fP9" secondAttribute="bottom" constant="20" id="HMZ-oQ-t3N"/>
                             <constraint firstItem="e0R-Kt-VkC" firstAttribute="trailing" secondItem="A49-2u-z29" secondAttribute="trailing" id="Rbb-zP-mnC"/>
                             <constraint firstItem="A49-2u-z29" firstAttribute="centerX" secondItem="qmL-fu-Pma" secondAttribute="centerX" id="XPa-J7-pSB"/>
                             <constraint firstItem="e0R-Kt-VkC" firstAttribute="top" secondItem="aT1-6j-Mfy" secondAttribute="bottom" constant="8" symbolic="YES" id="dcL-Mb-hHK"/>
                             <constraint firstItem="TpK-qk-w6n" firstAttribute="centerX" secondItem="aT1-6j-Mfy" secondAttribute="centerX" id="fmy-xt-fwd"/>
                             <constraint firstItem="aT1-6j-Mfy" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="frc-pm-5KC"/>
+                            <constraint firstItem="KoA-fO-TVq" firstAttribute="centerX" secondItem="qmL-fu-Pma" secondAttribute="centerX" id="ftY-YP-3bV"/>
                             <constraint firstItem="qmL-fu-Pma" firstAttribute="top" secondItem="A49-2u-z29" secondAttribute="bottom" constant="15" id="gf9-tB-lCI"/>
                             <constraint firstItem="3Cw-No-fP9" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="16" id="gfw-2e-HWB"/>
                             <constraint firstItem="3Cw-No-fP9" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="8" id="jeb-kx-FRN"/>
+                            <constraint firstItem="KoA-fO-TVq" firstAttribute="top" secondItem="qmL-fu-Pma" secondAttribute="bottom" constant="33" id="w3P-cd-n7j"/>
                             <constraint firstItem="e0R-Kt-VkC" firstAttribute="leading" secondItem="A49-2u-z29" secondAttribute="leading" id="yGv-wd-aLr"/>
                             <constraint firstItem="aT1-6j-Mfy" firstAttribute="trailing" secondItem="e0R-Kt-VkC" secondAttribute="trailing" id="zZS-wh-P7c"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="gfw-2e-HWB"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="emailField" destination="aT1-6j-Mfy" id="8dp-6p-sGH"/>
+                        <outlet property="fbLoginButton" destination="KoA-fO-TVq" id="KdQ-co-1BQ"/>
                         <outlet property="passwordField" destination="e0R-Kt-VkC" id="lFo-XZ-Pjn"/>
                         <segue destination="29I-ql-TCm" kind="show" identifier="segueToMap" id="8Vu-P8-VHt"/>
                     </connections>
@@ -156,7 +173,11 @@
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="refresh" id="zXA-f0-Ry1"/>
+                            <barButtonItem systemItem="refresh" id="zXA-f0-Ry1">
+                                <connections>
+                                    <action selector="refresh:" destination="TyW-hs-BKr" id="Ij0-Iz-gh0"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem image="pin" id="2zx-Dk-tYf">
                                 <connections>
                                     <segue destination="FbV-Rd-ndU" kind="presentation" identifier="segueToLocate" id="yyX-H3-2Cr"/>
@@ -355,7 +376,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vsb-zW-WG7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3092" y="621"/>
+            <point key="canvasLocation" x="3111" y="219"/>
         </scene>
         <!--Map And Pin View Controller-->
         <scene sceneID="j9W-MH-wGz">
@@ -397,6 +418,7 @@
                                 </state>
                                 <connections>
                                     <action selector="submit:" destination="7UN-oe-EzW" eventType="touchUpInside" id="Qlw-He-7LB"/>
+                                    <segue destination="Qha-lT-ph1" kind="unwind" unwindAction="unwindAfterAddingPin:" id="eCv-9A-GZh"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter a Link to Share Here" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="0Qf-P7-oyE">
@@ -425,12 +447,12 @@
                     <connections>
                         <outlet property="linkTextField" destination="0Qf-P7-oyE" id="jWO-HJ-3oM"/>
                         <outlet property="mapView" destination="GO1-hQ-0C6" id="SZq-p7-gpi"/>
-                        <segue destination="29I-ql-TCm" kind="show" identifier="unwind" id="nSC-yH-jVL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uao-T3-yqp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Qha-lT-ph1" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3445" y="-173"/>
+            <point key="canvasLocation" x="3979" y="219"/>
         </scene>
         <!--Map-->
         <scene sceneID="bsg-ZG-QDX">
@@ -475,10 +497,9 @@
         <image name="list" width="32" height="32"/>
         <image name="map" width="32" height="32"/>
         <image name="pin" width="32" height="32"/>
-        <image name="udacity" width="256" height="256"/>
+        <image name="udacity" width="80" height="80"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="EQ1-Gh-68w"/>
-        <segue reference="nSC-yH-jVL"/>
+        <segue reference="yyX-H3-2Cr"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -6,11 +6,11 @@
 //  Copyright © 2016 Jack Ngai. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 // MARK: - NetworkClient: NSObject
 
-class NetworkClient : NSObject {
+class NetworkClient : UIViewController {
     
     
     
@@ -20,6 +20,8 @@ class NetworkClient : NSObject {
     // MARK: Properties
     
     var user = StudentInformation()
+    
+    var students = [StudentInformation]()
     
     
     // MARK: GET
@@ -87,9 +89,15 @@ class NetworkClient : NSObject {
         
     }
     
-    func udacityPOST(username: String, password: String)->NSMutableURLRequest{
+    func udacityPOST(username: String = "", password: String = "", fbToken: String = "")->NSMutableURLRequest{
         
-        let jsonBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
+        var jsonBody:String!
+        
+        if username != "" && password != ""{
+            jsonBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
+        } else{
+            jsonBody = "{\"facebook_mobile\": {\"access_token\": \"\(fbToken)\"}}"
+        }
         
         let url = buildURL(Constants.Udacity.ApiScheme, host: Constants.Udacity.ApiHost, path: Constants.Udacity.Methods.sessionMethod)
         let request = NSMutableURLRequest(URL: url)
@@ -130,7 +138,7 @@ class NetworkClient : NSObject {
                     // Display error as an alert on screen if the issue is related to internet connection
                     if error.code == -1009{
                         performUIUpdatesOnMain({
-                            Helper.showAlert(error.domain, alertMessage: error.localizedDescription)
+                            Alert.show(error.domain, alertMessage: error.localizedDescription)
                         })
                     }
                 }
@@ -145,7 +153,7 @@ class NetworkClient : NSObject {
                 // Display status code as an alert on screen if the issue is invalid credentials
                 if (response as? NSHTTPURLResponse)?.statusCode == 403{
                     performUIUpdatesOnMain({ 
-                        Helper.showAlert("Invalid Credentials", alertMessage: "Please check the username and/or password.")
+                        Alert.show("Invalid Credentials", alertMessage: "Please check the username and/or password.")
                     })
                 }
                 

@@ -29,6 +29,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // The map. See the setup in the Storyboard file. Note particularly that the view controller
     // is set up as the map view's delegate.
     
+    var annotations = [MKPointAnnotation]()
+    
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -50,21 +52,21 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // The "locations" array is an array of dictionary objects that are similar to the JSON
         // data that you can download from parse.
         
-        let object = UIApplication.sharedApplication().delegate
-        let appDelegate = object as! AppDelegate
-        let students = appDelegate.students
+//        let object = UIApplication.sharedApplication().delegate
+//        let appDelegate = object as! AppDelegate
+//        let students = appDelegate.students
         
         
         
         // We will create an MKPointAnnotation for each dictionary in "locations". The
         // point annotations will be stored in this array, and then provided to the map view.
-        var annotations = [MKPointAnnotation]()
+        annotations = [MKPointAnnotation]()
         
         // The "locations" array is loaded with the sample data below. We are using the dictionaries
         // to create map annotations. This would be more stylish if the dictionaries were being
         // used to create custom structs. Perhaps StudentLocation structs.
         
-        for student in students {
+        for student in NetworkClient.sharedInstance().students {
             
             // Notice that the float values are being used to create CLLocationDegree values.
             // This is a version of the Double type.
@@ -186,9 +188,34 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
     }
     
-    @IBAction func logOut(sender: UIBarButtonItem) {
-        dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func unwindAfterAddingPin(segue: UIStoryboardSegue){
+        // This is the controller that MapAndPinView will unwind to after clicking "Submit"
     }
+    
+    @IBAction func logOut(sender: UIBarButtonItem) {
+        
+        NetworkClient.sharedInstance().deleteSessionAndLogout{
+            //self.performSegueWithIdentifier("mapViewLogout", sender: self)
+            //self.navigationController?.popToRootViewControllerAnimated(true)
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+
+    }
+    
+    @IBAction func refresh(sender: UIBarButtonItem) {
+        //LoadingIndicatorView.show()
+        
+        mapView.removeAnnotations(annotations)
+        NetworkClient.sharedInstance().students.removeAll(keepCapacity: false)
+        NetworkClient.sharedInstance().getStudentsLocation()
+        mapView.addAnnotations(annotations)
+        //LoadingIndicatorView.hide()
+        
+//        (UIApplication.sharedApplication().delegate as! AppDelegate).students.removeAll(keepCapacity: false)
+//        NetworkClient.sharedInstance().getStudentsLocation(&(UIApplication.sharedApplication().delegate as! AppDelegate).students)
+        
+    }
+    
     
     private func showAlert(alertTitle: String, alertMessage: String){
         let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .Alert)

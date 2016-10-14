@@ -22,7 +22,8 @@ class LocateViewController:UIViewController{
     var pinAnnotationView:MKPinAnnotationView!
     
     override func viewDidLoad() {
-
+        super.viewDidLoad()
+        self.tapScreenToHideKeyboard()
     }
     
     override func viewDidAppear(animated: Bool) {

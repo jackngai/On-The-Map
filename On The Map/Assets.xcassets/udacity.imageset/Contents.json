@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "LaunchLogo.pdf",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "udacity.pdf",
       "scale" : "2x"
     },
     {

@@ -26,6 +26,8 @@ class MapAndPinViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         
+        self.tapScreenToHideKeyboard()
+        
         self.pointAnnotation = MKPointAnnotation()
         //self.pointAnnotation.title = searchBar.text
         self.pointAnnotation.coordinate = CLLocationCoordinate2D(latitude: searchResponse!.boundingRegion.center.latitude, longitude: searchResponse!.boundingRegion.center.longitude)
@@ -54,7 +56,7 @@ class MapAndPinViewController: UIViewController {
         NetworkClient.sharedInstance().user.mediaURL = link
         
         // Add new entry to the array
-        (UIApplication.sharedApplication().delegate as! AppDelegate).students[0] = NetworkClient.sharedInstance().user
+        NetworkClient.sharedInstance().students[0] = NetworkClient.sharedInstance().user
         
         if NetworkClient.sharedInstance().user.objectID != ""{
             
@@ -179,7 +181,7 @@ class MapAndPinViewController: UIViewController {
             */
         }
         
-        performSegueWithIdentifier("unwind", sender: self)
+        //performSegueWithIdentifier("unwind", sender: self)
         
 
     }

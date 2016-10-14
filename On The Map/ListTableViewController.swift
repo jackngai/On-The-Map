@@ -10,7 +10,7 @@ import UIKit
 
 class ListTableViewController: UITableViewController {
     
-    let students = (UIApplication.sharedApplication().delegate as! AppDelegate).students
+    let students = NetworkClient.sharedInstance().students
     
     
 
@@ -28,21 +28,43 @@ class ListTableViewController: UITableViewController {
     }
 
     @IBAction func logOut(sender: UIBarButtonItem) {
+    
         
-        let deleteCookieRequest = NetworkClient.sharedInstance().udacityDelete()
-        
-        NetworkClient.sharedInstance().startTask("Udacity", request: deleteCookieRequest) { (result, error) in
-            guard let result = result else {
-                print("unable to unwrap result")
-                return
-            }
-            guard let error = error else {
-                print("unable to unwrap error")
-                return
-            }
-            print(result)
-            print(error)
+        NetworkClient.sharedInstance().deleteSessionAndLogout{
+            self.dismissViewControllerAnimated(true, completion: nil)
         }
+//        ActivityIndicator.show()
+//        
+//        let deleteCookieRequest = NetworkClient.sharedInstance().udacityDelete()
+//        
+//        NetworkClient.sharedInstance().startTask("Udacity", request: deleteCookieRequest) { (result, error) in
+//            guard let session = result["session"] as? [String:String], let sessionID = session["id"] else {
+//                print("Unable to retrieve session ID")
+//                return
+//            }
+//            guard error == nil else {
+//                print(error)
+//                return
+//            }
+//            if sessionID == ""{
+//                performUIUpdatesOnMain({
+//                    ActivityIndicator.hide()
+//                    Alert.show("Logout Error", alertMessage: "Unable to delete session ID. Please try again.")
+//                })
+//            } else {
+//                performUIUpdatesOnMain({
+//                    ActivityIndicator.hide()
+//                    self.dismissViewControllerAnimated(true, completion: nil)
+//                })
+//            }
+//        }
+        
+        
+        
+        
+        //let result = result,
+        //dismissViewControllerAnimated(true, completion: nil)
+        
         /*
         // MARK: Old code
         let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
@@ -65,7 +87,8 @@ class ListTableViewController: UITableViewController {
         }
         task.resume()
         */
-        dismissViewControllerAnimated(true, completion: nil)
+        
+        
     }
     
 

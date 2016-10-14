@@ -13,36 +13,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    let helper = Helper()
+    //let helper = Helper()
     
-    var students = [StudentInformation]()
+    //var students = [StudentInformation]()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
         
-         var parameters = [String:AnyObject]()
-         
-         parameters[Constants.Parse.ParameterKeys.limit] = 100 as AnyObject
-         parameters[Constants.Parse.ParameterKeys.order] = "-updatedAt" as AnyObject
-         
-         let getStudentsLocationRequest = NetworkClient.sharedInstance().parseGet(parameters)
+        NetworkClient.sharedInstance().getStudentsLocation()
         
-        NetworkClient.sharedInstance().startTask("Parse", request: getStudentsLocationRequest) { (result, error) in
-            
-            let dictionaries = result["results"] as! [[String:AnyObject]]
-            
-            for dictionary in dictionaries{
-                let student = StudentInformation(dictionary: dictionary)
-                self.students.append(student)
-                
-                // MARK: Test Code
-                //print(student.firstName)
-                
-                // end test code
-                
-            }
-        }
+        FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        
+        FBSDKLoginButton.classForCoder()
+        
+        //FBSDKLoginButton.sizeToFit()
+        
+        
+//         var parameters = [String:AnyObject]()
+//         
+//         parameters[Constants.Parse.ParameterKeys.limit] = 100 as AnyObject
+//         parameters[Constants.Parse.ParameterKeys.order] = "-updatedAt" as AnyObject
+//         
+//         let getStudentsLocationRequest = NetworkClient.sharedInstance().parseGet(parameters)
+//        
+//        NetworkClient.sharedInstance().startTask("Parse", request: getStudentsLocationRequest) { (result, error) in
+//            
+//            let dictionaries = result["results"] as! [[String:AnyObject]]
+//            
+//            for dictionary in dictionaries{
+//                let student = StudentInformation(dictionary: dictionary)
+//                self.students.append(student)
+//                
+//                // MARK: Test Code
+//                //print(student.firstName)
+//                
+//                // end test code
+//                
+//            }
+//        }
  
         /*
         // MARK: Old code
@@ -96,6 +105,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         task.resume()
         */
         return true
+    }
+    
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        
+        return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+        
+        
     }
 
     func applicationWillResignActive(application: UIApplication) {
