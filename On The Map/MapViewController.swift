@@ -9,29 +9,18 @@
 import UIKit
 import MapKit
 
-/**
- * This view controller demonstrates the objects involved in displaying pins on a map.
- *
- * The map is a MKMapView.
- * The pins are represented by MKPointAnnotation instances.
- *
- * The view controller conforms to the MKMapViewDelegate so that it can receive a method
- * invocation when a pin annotation is tapped. It accomplishes this using two delegate
- * methods: one to put a small "info" button on the right side of each pin, and one to
- * respond when the "info" button is tapped.
- */
-
 class MapViewController: UIViewController, MKMapViewDelegate {
     
     
-    
+    // MARK: Outlets
     @IBOutlet weak var mapView: MKMapView!
-    // The map. See the setup in the Storyboard file. Note particularly that the view controller
-    // is set up as the map view's delegate.
+
     
+    // MARK: Properties
+    // Create an empty array of map annotations
     var annotations = [MKPointAnnotation]()
     
-    
+    // MARK: View Lifecycle methods
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -49,22 +38,91 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // The "locations" array is an array of dictionary objects that are similar to the JSON
-        // data that you can download from parse.
+
+        // Populate map annotations array with information from students array
+        populateAnnotations()
+
         
-//        let object = UIApplication.sharedApplication().delegate
-//        let appDelegate = object as! AppDelegate
-//        let students = appDelegate.students
+        // When the array is complete, we add the annotations to the map.
+        self.mapView.addAnnotations(annotations)
+        
+        mapView.delegate = self
         
         
+        // MARK: Look for any location pins placed by the current user by using the user unique key
+        // Create a empty dictionary of parameters
+        var parameters = [String:AnyObject]()
         
-        // We will create an MKPointAnnotation for each dictionary in "locations". The
-        // point annotations will be stored in this array, and then provided to the map view.
-        annotations = [MKPointAnnotation]()
+        // Create a string version of {"uniqueKey":"1234"} where 1234 is the unique Key for the user
+        let dictionaryString = "{\"uniqueKey\":\"\(NetworkClient.sharedInstance().user.uniqueKey)\"}"
         
-        // The "locations" array is loaded with the sample data below. We are using the dictionaries
-        // to create map annotations. This would be more stylish if the dictionaries were being
-        // used to create custom structs. Perhaps StudentLocation structs.
+        //let percentEncodedDictString = dictionaryString.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+    
+        
+        // Add dictionary as a value to the where key to create
+        // Ex: https://parse.udacity.com/parse/classes/StudentLocation?where={"uniqueKey":"1234"}
+        parameters[Constants.Parse.ParameterKeys.Where] = dictionaryString
+        
+        
+        let getObjectIDRequest = NetworkClient.sharedInstance().parseGet(parameters)
+        
+        NetworkClient.sharedInstance().startTask("Parse", request: getObjectIDRequest) { (result, error) in
+            
+            guard error == nil else{
+                print("Received this error trying to locate Object ID: \(error)")
+                return
+            }
+            
+            guard result != nil else{
+                print("Received nil from server when trying to locate Object ID")
+                return
+            }
+            
+            let dictionaries = result["results"] as! [[String:AnyObject]]
+            
+            let lastEntry = dictionaries[dictionaries.endIndex - 1]
+            
+            // Save the ObjectID from response to the user.objectId field
+            NetworkClient.sharedInstance().user.objectID = lastEntry["objectId"] as! String
+        }
+        
+    }
+    
+    
+    @IBAction func unwindAfterAddingPin(segue: UIStoryboardSegue){
+        // This is the controller that MapAndPinView will unwind to after clicking "Submit"
+        let button = UIBarButtonItem()
+        refresh(button)
+    }
+    
+    
+    @IBAction func addPin(sender: UIBarButtonItem) {
+        
+        NetworkClient.sharedInstance().checkForExistingPin("mapToLocate", viewController: self)
+        
+    }
+    
+    @IBAction func logOut(sender: UIBarButtonItem) {
+        
+        NetworkClient.sharedInstance().deleteSessionAndLogout{
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+
+    }
+    
+    @IBAction func refresh(sender: UIBarButtonItem) {
+        mapView.removeAnnotations(annotations)
+        NetworkClient.sharedInstance().students.removeAll(keepCapacity: false)
+        NetworkClient.sharedInstance().getStudentsLocation{
+            self.populateAnnotations()
+        }
+        mapView.addAnnotations(annotations)
+    }
+    
+    private func populateAnnotations(){
+        
+        // Erase existing annotations
+         annotations.removeAll()
         
         for student in NetworkClient.sharedInstance().students {
             
@@ -85,135 +143,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             // Finally we place the annotation in an array of annotations.
             annotations.append(annotation)
         }
-        
-        // When the array is complete, we add the annotations to the map.
-        self.mapView.addAnnotations(annotations)
-        
-        mapView.delegate = self
-        
-        // After the map is displayed, check if user posted any pins by using 
-        // https://parse.udacity.com/parse/classes/StudentLocation?where={"uniqueKey":"1234"}
-        // Save the ObjectID from response to the user.objectId field
-
-        
-        var parameters = [String:AnyObject]()
-        
-        let dictionary = ["uniqueKey":NetworkClient.sharedInstance().user.uniqueKey]
-        
-        parameters[Constants.Parse.ParameterKeys.Where] = dictionary as AnyObject
-        
-        let getObjectIDRequest = NetworkClient.sharedInstance().parseGet(parameters)
-        
-        NetworkClient.sharedInstance().startTask("Parse", request: getObjectIDRequest) { (result, error) in
-            
-            let dictionaries = result["results"] as! [[String:AnyObject]]
-            
-            let lastEntry = dictionaries[dictionaries.endIndex - 1]
-            
-            NetworkClient.sharedInstance().user.objectID = lastEntry["objectId"] as! String
-        }
-        /*
-        // MARK: Old code
-        
-        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22uniqueKey%22%3A%22" + NetworkClient.sharedInstance().user.uniqueKey + "%22%7D"
-        let url = NSURL(string: urlString)
-        let request = NSMutableURLRequest(URL: url!)
-        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil { // Handle error
-                return
-            }
-            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
-            
-            
- 
-            guard error == nil else {
-                print("Received error from dataTaskWithRequest")
-                guard let error = error else {
-                    print("Unable to safely unwrap NSERROR object")
-                    return
-                }
-                if error.code == -1009{
-                    dispatch_async(dispatch_get_main_queue()){
-                        self.showAlert(error.domain, alertMessage: error.localizedDescription)
-                    }
-                }
-                return
-            }
-            
-            guard let data = data else{
-                self.showAlert("Error", alertMessage: "There was an error retrieving student data.")
-                return
-            }
-            
-            var parsedResult:AnyObject!
-            do{
-                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-            } catch {
-                print("Unable process JSON into foundation object")
-            }
-            
-            let dictionaries = parsedResult["results"] as! [[String:AnyObject]]
-            
-            let lastEntry = dictionaries[dictionaries.endIndex - 1]
-            
-            appDelegate.user.objectID = lastEntry["objectId"] as! String
-            
-//            for dictionary in dictionaries{
-//                let student = StudentInformation(dictionary: dictionary)
-//                self.students.append(student)
-//                
-//                // MARK: Test Code
-//                //print(student.firstName)
-//                
-//                // end test code
-//                
-//            }
-
-             
- 
-            
-            
-        }
-        task.resume()
-        */
-        
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-
-    }
-    
-    @IBAction func unwindAfterAddingPin(segue: UIStoryboardSegue){
-        // This is the controller that MapAndPinView will unwind to after clicking "Submit"
-    }
-    
-    @IBAction func logOut(sender: UIBarButtonItem) {
-        
-        NetworkClient.sharedInstance().deleteSessionAndLogout{
-            //self.performSegueWithIdentifier("mapViewLogout", sender: self)
-            //self.navigationController?.popToRootViewControllerAnimated(true)
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }
-
-    }
-    
-    @IBAction func refresh(sender: UIBarButtonItem) {
-        //LoadingIndicatorView.show()
-        
-        mapView.removeAnnotations(annotations)
-        NetworkClient.sharedInstance().students.removeAll(keepCapacity: false)
-        NetworkClient.sharedInstance().getStudentsLocation()
-        mapView.addAnnotations(annotations)
-        //LoadingIndicatorView.hide()
-        
-//        (UIApplication.sharedApplication().delegate as! AppDelegate).students.removeAll(keepCapacity: false)
-//        NetworkClient.sharedInstance().getStudentsLocation(&(UIApplication.sharedApplication().delegate as! AppDelegate).students)
-        
     }
     
     

@@ -11,8 +11,10 @@ import MapKit
 
 class LocateViewController:UIViewController{
     
+    // MARK: Outlets
     @IBOutlet weak var locationTextField: UITextField!
     
+    // MARK: Properties
     var annotation:MKAnnotation!
     var searchRequest:MKLocalSearchRequest!
     var search:MKLocalSearch!
@@ -21,65 +23,34 @@ class LocateViewController:UIViewController{
     var pointAnnotation:MKPointAnnotation!
     var pinAnnotationView:MKPinAnnotationView!
     
+    
+    // MARK: View lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tapScreenToHideKeyboard()
     }
+
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        // MARK: Test Code
-        
-        // Check if a pin exists for the current session, if it does, cancel
-        
-//        for student in (UIApplication.sharedApplication().delegate as! AppDelegate).students{
-//            
-//            if student.uniqueKey == (UIApplication.sharedApplication().delegate as! AppDelegate).user.uniqueKey {
-//                let alertController = UIAlertController(title: nil, message: "You Have Already Posted a Student Location. Would You Like to Overwrite Your Current Location?", preferredStyle: .Alert)
-//                let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action:UIAlertAction) in
-//                    self.dismissViewControllerAnimated(true, completion: nil)
-//                })
-//                
-//                alertController.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: nil))
-//                alertController.addAction(cancelAction)
-//                
-//                self.presentViewController(alertController, animated: true, completion: nil)
-//            }
-//        }
-        
-        if NetworkClient.sharedInstance().user.objectID != ""{
-            let alertController = UIAlertController(title: nil, message: "You Have Already Posted a Student Location. Would You Like to Overwrite Your Current Location?", preferredStyle: .Alert)
-            let newPinAction = UIAlertAction(title: "Add New", style: .Cancel, handler: { (action:UIAlertAction) in
-                NetworkClient.sharedInstance().user.objectID = ""
-            })
-            
-            alertController.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: nil))
-            alertController.addAction(newPinAction)
-            
-            self.presentViewController(alertController, animated: true, completion: nil)
-            
-            
-        }
-        
-        // end test code
-    }
-    
-    
+    // MARK: Override method
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?){
         let controller = segue.destinationViewController as! MapAndPinViewController
         
+        // Pass searchResponse to MapAndPinViewController so it will have the location info
         controller.searchResponse = searchResponse
     }
     
-    
+    // MARK: Actions
     @IBAction func find(sender: UIButton) {
         
-        // Save the map string to the user's struct
+        
+        
+        // Check to confirm location text field is not blank
         guard let location = locationTextField.text else{
             print("location field is nil")
             return
         }
+        
+        // Save the map string to the user's struct
         NetworkClient.sharedInstance().user.mapString = location
         
         searchRequest = MKLocalSearchRequest()

@@ -10,7 +10,39 @@ import UIKit
 
 extension NetworkClient{
     
-    func getStudentsLocation(){
+    func checkForExistingPin(segueIdentifier: String, viewController: UIViewController){
+        // MARK: Overwrite Warning
+        // If Object ID is populated, it means user already posted a pin
+        // Give user option to overwrite by keeping Object ID populated
+        // or add new pin by blanking the Object ID field
+        if NetworkClient.sharedInstance().user.objectID != ""{
+            let alertController = UIAlertController(title: nil, message: "You Have Already Posted a Student Location. Would You Like to Overwrite Your Current Location?", preferredStyle: .Alert)
+            let newPinAction = UIAlertAction(title: "Add New", style: .Cancel, handler: { (action:UIAlertAction) in
+                NetworkClient.sharedInstance().user.objectID = ""
+                viewController.performSegueWithIdentifier(segueIdentifier, sender: self)
+            })
+            
+            let overwriteAction = UIAlertAction(title: "Overwrite", style: .Default, handler: { (UIAlertAction) in
+                viewController.performSegueWithIdentifier(segueIdentifier, sender: self)
+            })
+            
+            alertController.addAction(newPinAction)
+            alertController.addAction(overwriteAction)
+            
+            viewController.presentViewController(alertController, animated: false, completion: nil)
+            
+
+            
+        }
+    }
+    
+    func getStudentsLocation(update:()->Void = {}){
+        
+        performUIUpdatesOnMain({
+            ActivityIndicator.show(loadingText: "Updating students location information.")
+            
+        })
+        
         var parameters = [String:AnyObject]()
         
         parameters[Constants.Parse.ParameterKeys.limit] = 100 as AnyObject
@@ -26,18 +58,12 @@ extension NetworkClient{
                 let student = StudentInformation(dictionary: dictionary)
                 self.students.append(student)
                 
-                // MARK: Test Code
-                //print(student.firstName)
-                
-                // end test code
-                
             }
-            // MARK: Test Code
-            //print(self.students)
             
-            // end test code
+            update()
+
             performUIUpdatesOnMain({ 
-                //LoadingIndicatorView.hide()
+                ActivityIndicator.hide()
 
             })
             

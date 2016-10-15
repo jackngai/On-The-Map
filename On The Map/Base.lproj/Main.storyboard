@@ -180,13 +180,14 @@
                             </barButtonItem>
                             <barButtonItem image="pin" id="2zx-Dk-tYf">
                                 <connections>
-                                    <segue destination="FbV-Rd-ndU" kind="presentation" identifier="segueToLocate" id="yyX-H3-2Cr"/>
+                                    <action selector="addPin:" destination="TyW-hs-BKr" id="h1P-MJ-62l"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="b7z-8b-ofk" id="xjJ-Pd-wLR"/>
+                        <segue destination="FbV-Rd-ndU" kind="presentation" identifier="mapToLocate" id="ceN-Fh-QqX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ogX-EU-IO4" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -243,15 +244,21 @@
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="refresh" id="4E8-qH-UJO"/>
+                            <barButtonItem systemItem="refresh" id="4E8-qH-UJO">
+                                <connections>
+                                    <action selector="refresh:" destination="t55-RJ-X7U" id="mRQ-co-v0R"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem image="pin" id="q33-ml-9A3">
                                 <connections>
-                                    <action selector="AddPin:" destination="t55-RJ-X7U" id="Fxz-uZ-yGX"/>
-                                    <segue destination="FbV-Rd-ndU" kind="presentation" id="EQ1-Gh-68w"/>
+                                    <action selector="addPin:" destination="t55-RJ-X7U" id="H04-sA-uSL"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
+                    <connections>
+                        <segue destination="FbV-Rd-ndU" kind="presentation" identifier="listToLocate" id="lB8-RZ-ZOJ"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WUC-FQ-Msm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -293,7 +300,7 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="160" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yle-bj-Puj">
-                                <rect key="frame" x="0.0" y="217" width="600" height="120"/>
+                                <rect key="frame" x="0.0" y="217" width="600" height="124"/>
                                 <color key="backgroundColor" red="0.0" green="0.29411764705882354" blue="0.52031642319587279" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" priority="900" constant="120" id="tsB-AH-kwt"/>
@@ -330,9 +337,9 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Your Location Here" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bkg-iA-mIj">
-                                <rect key="frame" x="40" y="262" width="520" height="30"/>
+                                <rect key="frame" x="40" y="262" width="520" height="34"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="fGe-NA-Qg6"/>
+                                    <constraint firstAttribute="height" constant="34" id="fGe-NA-Qg6"/>
                                 </constraints>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="32"/>
@@ -500,6 +507,6 @@
         <image name="udacity" width="80" height="80"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="yyX-H3-2Cr"/>
+        <segue reference="lB8-RZ-ZOJ"/>
     </inferredMetricsTieBreakers>
 </document>

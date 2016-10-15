@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+// Hide keyboard when textfield is no longer in focus
+
 class TextFieldDelegate: NSObject, UITextFieldDelegate {
     func textFieldDidEndEditing(textField: UITextField) {
         textField.resignFirstResponder()

@@ -11,16 +11,16 @@ import MapKit
 
 class MapAndPinViewController: UIViewController {
     
+    // MARK: Outlets
     @IBOutlet weak var linkTextField: UITextField!
-
     @IBOutlet weak var mapView: MKMapView!
     
-    //var user = (UIApplication.sharedApplication().delegate as! AppDelegate).user
-    
+    // MARK: Properties
     var searchResponse:MKLocalSearchResponse!
     var pointAnnotation:MKPointAnnotation!
     var pinAnnotationView:MKPinAnnotationView!
 
+    // MARK: View Lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,21 +29,14 @@ class MapAndPinViewController: UIViewController {
         self.tapScreenToHideKeyboard()
         
         self.pointAnnotation = MKPointAnnotation()
-        //self.pointAnnotation.title = searchBar.text
         self.pointAnnotation.coordinate = CLLocationCoordinate2D(latitude: searchResponse!.boundingRegion.center.latitude, longitude: searchResponse!.boundingRegion.center.longitude)
-        
-        
         self.pinAnnotationView = MKPinAnnotationView(annotation: self.pointAnnotation, reuseIdentifier: nil)
         self.mapView.centerCoordinate = self.pointAnnotation.coordinate
         self.mapView.addAnnotation(self.pinAnnotationView.annotation!)
         self.mapView.setRegion(searchResponse.boundingRegion, animated: true)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
+    // MARK: Actions
     @IBAction func submit(sender: AnyObject) {
         
         guard let link = linkTextField.text where link != "" else {
@@ -51,137 +44,43 @@ class MapAndPinViewController: UIViewController {
             return
         }
         
+        // Save user's coordinates and link to the student struct
         NetworkClient.sharedInstance().user.latitude = searchResponse!.boundingRegion.center.latitude
         NetworkClient.sharedInstance().user.longitude = searchResponse!.boundingRegion.center.longitude
         NetworkClient.sharedInstance().user.mediaURL = link
         
-        // Add new entry to the array
-        NetworkClient.sharedInstance().students[0] = NetworkClient.sharedInstance().user
-        
+        // If Object ID is blank, create a PUT (overwrite) request, else create a POST (add new pin) request
+        var request = NSMutableURLRequest()
         if NetworkClient.sharedInstance().user.objectID != ""{
             
-            let overwriteRequest = NetworkClient.sharedInstance().parsePutOrPost("PUT", link: link, latitude: searchResponse!.boundingRegion.center.latitude, longitude: searchResponse!.boundingRegion.center.longitude)
-            
-            NetworkClient.sharedInstance().startTask("Parse", request: overwriteRequest, completionHandlerForTask: { (result, error) in
-                guard let result = result else{
-                    print("result is nil")
-                    return
-                }
-                guard let error = error else{
-                    print("error is nil")
-                    return
-                }
-                print(result)
-                print(error)
-            })
-            
-
-            
-            /*
-            // MARK: Old code
-            
-            let urlString = "https://parse.udacity.com/parse/classes/StudentLocation/" + user.objectID
-            let url = NSURL(string: urlString)
-            let request = NSMutableURLRequest(URL: url!)
-            request.HTTPMethod = "PUT"
-            request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-            request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            request.HTTPBody = "{\"uniqueKey\": \"\(user.uniqueKey)\", \"firstName\": \"\(user.firstName)\", \"lastName\": \"\(user.lastName)\",\"mapString\": \"\(user.mapString)\", \"mediaURL\": \"\(link)\" ,\"latitude\": \(searchResponse!.boundingRegion.center.latitude), \"longitude\": \(searchResponse!.boundingRegion.center.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
-    
-            
-            user.latitude = searchResponse!.boundingRegion.center.latitude
-            user.longitude = searchResponse!.boundingRegion.center.longitude
-            user.mediaURL = link
-            
-            let session = NSURLSession.sharedSession()
-            let task = session.dataTaskWithRequest(request) { data, response, error in
-                if error != nil { // Handle error…
-                    return
-                }
-                // MARK: Test code
-                
-                // print(NSString(data: data!, encoding: NSUTF8StringEncoding))
-                // print(error)
-                
-                //end test code
-                
-                
-            }
-            task.resume()
-            
-            // MARK: Test code
-            
-            //print(user)
-            //print((UIApplication.sharedApplication().delegate as! AppDelegate).students)
-            
-            //end test code
-            
-            //(UIApplication.sharedApplication().delegate as! AppDelegate).students.insert(user, atIndex: 0)
-            (UIApplication.sharedApplication().delegate as! AppDelegate).students[0] = user
- 
-        */
+            request = NetworkClient.sharedInstance().parsePutOrPost("PUT", link: link, latitude: searchResponse!.boundingRegion.center.latitude, longitude: searchResponse!.boundingRegion.center.longitude)
             
         } else {
             
-            
-            let addNewLocationRequest = NetworkClient.sharedInstance().parsePutOrPost("POST", link: link, latitude: searchResponse!.boundingRegion.center.latitude, longitude: searchResponse!.boundingRegion.center.longitude)
-            
-            NetworkClient.sharedInstance().startTask("Parse", request: addNewLocationRequest, completionHandlerForTask: { (result, error) in
+            request = NetworkClient.sharedInstance().parsePutOrPost("POST", link: link, latitude: searchResponse!.boundingRegion.center.latitude, longitude: searchResponse!.boundingRegion.center.longitude)
+        }
+        
+            NetworkClient.sharedInstance().startTask("Parse", request: request, completionHandlerForTask: { (result, error) in
+                
+                guard error == nil else{
+                    print("Received error: \(error)")
+                    return
+                }
+                
                 guard let result = result else{
                     print("result is nil")
                     return
                 }
-                guard let error = error else{
-                    print("error is nil")
-                    return
+   
+                if NetworkClient.sharedInstance().user.objectID != ""{
+                    print("Updated successfully on: \(result["updatedAt"])")
+                } else {
+                    print("New pin added on: \(result["createdAt"])")
                 }
-                print(result)
-                print(error)
+                
             })
-            
-            /*
-            // MARK: Old code
-            
-            let request = NSMutableURLRequest(URL: NSURL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
-            request.HTTPMethod = "POST"
-            request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-            request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-
-            request.HTTPBody = "{\"uniqueKey\": \"\(user.uniqueKey)\", \"firstName\": \"\(user.firstName)\", \"lastName\": \"\(user.lastName)\",\"mapString\": \"\(user.mapString)\", \"mediaURL\": \"\(link)\" ,\"latitude\": \(searchResponse!.boundingRegion.center.latitude), \"longitude\": \(searchResponse!.boundingRegion.center.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
-            
-            
-            let session = NSURLSession.sharedSession()
-            let task = session.dataTaskWithRequest(request) { data, response, error in
-                if error != nil { // Handle error…
-                    return
-                }
-                
-                // MARK: Test code
-                
-                // print(NSString(data: data!, encoding: NSUTF8StringEncoding))
-                // print(error)
-                
-                //end test code
-                
-            }
-            task.resume()
- 
- 
-            
-            // MARK: Test code
-            
-            //print(user)
-            //print((UIApplication.sharedApplication().delegate as! AppDelegate).students)
-            
-            //end test code
-
-            */
-        }
+    
         
-        //performSegueWithIdentifier("unwind", sender: self)
         
 
     }

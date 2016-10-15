@@ -52,7 +52,7 @@ class NetworkClient : UIViewController {
         
         switch HTTPMethod {
         case "PUT":
-            url = buildURL(Constants.Parse.ApiScheme, host: Constants.Parse.ApiHost, path: Constants.Parse.ApiPath, withPathExtension: user.objectID)
+            url = buildURL(Constants.Parse.ApiScheme, host: Constants.Parse.ApiHost, path: Constants.Parse.ApiPutPath, withPathExtension: user.objectID)
         case "POST":
             url = buildURL(Constants.Parse.ApiScheme, host: Constants.Parse.ApiHost, path: Constants.Parse.ApiPath)
         default:
@@ -198,21 +198,29 @@ class NetworkClient : UIViewController {
             components.path = path
         }
         
+//        guard let parameters = parameters else {
+//            if host.containsString("parse"){
+//                print("Parse API with no parameters, potential issue")
+//            }
+//            if let url = components.URL {
+//                print(url)
+//                return url
+//            }
+//
+//        }
+        
+        if let parameters = parameters{
+            components.queryItems = [NSURLQueryItem]()
+            
+            for (key, value) in parameters {
+                let queryItem = NSURLQueryItem(name: key, value: "\(value)")
+                components.queryItems!.append(queryItem)
+            }
+        }
         
         guard let url = components.URL else {
-            return NSURL(string: "buildURLfailed")!
-        }
-        
-        guard let parameters = parameters else {
-            print("No parameters provided")
-            return url
-        }
-        
-        components.queryItems = [NSURLQueryItem]()
-        
-        for (key, value) in parameters {
-            let queryItem = NSURLQueryItem(name: key, value: "\(value)")
-            components.queryItems!.append(queryItem)
+            print("buildURLfailed")
+            return NSURL(string: "")!
         }
         
         // MARK: Test code
@@ -232,191 +240,4 @@ class NetworkClient : UIViewController {
         return Singleton.sharedInstance
     }
     
-    //---------------------------------------------------------------------------------------------------
-/*
-    func taskForGETMethod<Scheme, Host, Path>(method: String, parameters: [String:AnyObject], scheme: Scheme, host: Host, path: Path, completionHandlerForGET: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-        
-        /* 1. Set the parameters */
-        var parametersWithApiKey = parameters
-//        if (host as! String).containsString("parse"){
-//            parametersWithApiKey[Constants.ParameterKeys.ApiKey] = Constants.Parse.APIkey
-//        }
-        
-        /* 2/3. Build the URL, Configure the request */
-        
-        var request = NSMutableURLRequest(URL: networkURLFromParameters(parametersWithApiKey, withPathExtension: method, user: user.uniqueKey, scheme: scheme, host: host, path: path))
-        
-        // MARK: Modify request if this is for Parse API
-        
-        if (host as! String).containsString("parse"){
-            let dictionary = ["uniqueKey":user.uniqueKey]
-            
-            parametersWithApiKey[Constants.Parse.ParameterKeys.Where] = dictionary
-             request = NSMutableURLRequest(URL: networkURLFromParameters(parametersWithApiKey, withPathExtension: method, scheme: scheme, host: host, path: path))
-            request.addValue(Constants.Parse.appID, forHTTPHeaderField: "X-Parse-Application-Id")
-            request.addValue(Constants.Parse.APIkey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        }
-        
-        /* 4. Make the request */
-        let task = session.dataTaskWithRequest(request) { (data, response, error) in
-            
-            func sendError(error: String) {
-                print(error)
-                let userInfo = [NSLocalizedDescriptionKey : error]
-                completionHandlerForGET(result: nil, error: NSError(domain: "taskForGETMethod", code: 1, userInfo: userInfo))
-            }
-            
-            /* GUARD: Was there an error? */
-            guard (error == nil) else {
-                sendError("There was an error with your request: \(error)")
-                return
-            }
-            
-            /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                sendError("Status code: \((response as? NSHTTPURLResponse)?.statusCode))")
-                return
-            }
-            
-            /* GUARD: Was there any data returned? */
-            guard let data = data else {
-                sendError("No data was returned by the request!")
-                return
-            }
-            
-            /* 5/6. Parse the data and use the data (happens in completion handler) */
-            
-            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-            
-            // If this is for Udacity's API, use the data set that removed the first 5 characters
-            if (host as! String).containsString("www") {
-                self.convertDataWithCompletionHandler(newData, completionHandlerForConvertData: completionHandlerForGET)
-            }
-            else{
-                self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET)
-            }
-        }
-        
-        /* 7. Start the request */
-        task.resume()
-        
-        return task
-    }
-
-    // MARK: POST
-    
-    func taskForPOSTMethod<Scheme, Host, Path>(method: String, parameters: [String:AnyObject], jsonBody: String, scheme: Scheme, host: Host, path: Path, completionHandlerForPOST: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-        
-        /* 1. Set the parameters */
-        var parametersWithApiKey = parameters
-        if (host as! String).containsString("parse"){
-            parametersWithApiKey[Constants.ParameterKeys.ApiKey] = Constants.Parse.APIkey
-        }
-
-        /* 2/3. Build the URL, Configure the request */
-        
-        // MARK: Remember to adjust scheme, host, path so they are not fixed
-        let request = NSMutableURLRequest(URL: networkURLFromParameters(parametersWithApiKey, withPathExtension: method, scheme: scheme, host: host, path: path))
-        request.HTTPMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
-        
-        /* Test Code */
-        do{
-            let value = try NSJSONSerialization.JSONObjectWithData(request.HTTPBody!, options: .AllowFragments)
-            print(value)
-        } catch {
-            print("Unable to parse HTTPBody to foundation object")
-        }
-        /* End Test Code */
-        
-        /* 4. Make the request */
-        let task = session.dataTaskWithRequest(request) { (data, response, error) in
-            
-            func sendError(error: String) {
-                print(error)
-                let userInfo = [NSLocalizedDescriptionKey : error]
-                completionHandlerForPOST(result: nil, error: NSError(domain: "taskForGETMethod", code: 1, userInfo: userInfo))
-            }
-            
-            /* GUARD: Was there an error? */
-            guard (error == nil) else {
-                sendError("There was an error with your request: \(error)")
-                return
-            }
-            
-            /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                sendError("Status code: \((response as? NSHTTPURLResponse)?.statusCode))")
-                return
-            }
-            
-            /* GUARD: Was there any data returned? */
-            guard let data = data else {
-                sendError("No data was returned by the request!")
-                return
-            }
-            
-            /* 5/6. Parse the data and use the data (happens in completion handler) */
-            
-            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-            
-            // If this is for Udacity's API, use the data set that removed the first 5 characters
-            if (host as! String).containsString("www") {
-                self.convertDataWithCompletionHandler(newData, completionHandlerForConvertData: completionHandlerForPOST)
-            }
-            else{
-                self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForPOST)
-            }
-        }
-        
-        /* 7. Start the request */
-        task.resume()
-        
-        return task
-    }
-    
-       
-    // MARK: Helpers
-    
-    // substitute the key for the value that is contained within the method name
-    func subtituteKeyInMethod(method: String, key: String, value: String) -> String? {
-        if method.rangeOfString("{\(key)}") != nil {
-            return method.stringByReplacingOccurrencesOfString("{\(key)}", withString: value)
-        } else {
-            return nil
-        }
-    }
-    
-
-    
-    // create a URL from parameters
-    func networkURLFromParameters<Scheme, Host, Path>(parameters: [String:AnyObject], withPathExtension: String? = nil, user: String? = nil, scheme: Scheme, host: Host, path: Path) -> NSURL {
-        
-    
-        let components = NSURLComponents()
-        //var currentSource:
-        
-            components.scheme = scheme as? String
-            components.host = host as? String
-            components.path = (path as! String) + (withPathExtension ?? "") + (user ?? "")
-
-        
-        //let currentSource = source as! Constants
-
-//        components.scheme = source.ApiScheme
-//        components.host = Constants.ApiHost
-//        components.path = Constants.ApiPath + (withPathExtension ?? "")
-        components.queryItems = [NSURLQueryItem]()
-        
-        for (key, value) in parameters {
-            let queryItem = NSURLQueryItem(name: key, value: "\(value)")
-            components.queryItems!.append(queryItem)
-        }
-        
-        return components.URL!
-    }
-    */
-
 }
