@@ -12,7 +12,7 @@ class Alert:UIViewController{
     
     internal static var alertController:UIAlertController!
     
-    internal static func show(alertTitle: String, alertMessage: String){
+    internal static func show(alertTitle: String, alertMessage: String, viewController: UIViewController){
         alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .Alert)
         let action = UIAlertAction(title: "Okay", style: .Default, handler: nil)
         alertController.addAction(action)
@@ -21,21 +21,7 @@ class Alert:UIViewController{
         // Hide Activity Indicator before showing the alert
         ActivityIndicator.hide()
         
-        if let controller = UIApplication.sharedApplication().keyWindow?.rootViewController?.presentedViewController{
-            controller.presentViewController(Alert.alertController, animated: true, completion: nil)
-        } else {
-//            if let window = UIApplication.sharedApplication().delegate?.window{
-//                window?.rootViewController?.presentViewController(Alert.alertController, animated: true){
-//                }
-//                
-//                
-//                
-//                
-//                //, completion: nil)
-//                
-//                
-//            }
-             UIApplication.sharedApplication().delegate?.window!!.rootViewController?.presentViewController(Alert.alertController, animated: true, completion: nil)
-        }
+        viewController.presentViewController(Alert.alertController, animated: true, completion: nil)
+
     }
 }

@@ -138,7 +138,7 @@ class NetworkClient : UIViewController {
                     // Display error as an alert on screen if the issue is related to internet connection
                     if error.code == -1009{
                         performUIUpdatesOnMain({
-                            Alert.show(error.domain, alertMessage: error.localizedDescription)
+                            Alert.show(error.domain, alertMessage: error.localizedDescription, viewController: self)
                         })
                     }
                 }
@@ -153,7 +153,7 @@ class NetworkClient : UIViewController {
                 // Display status code as an alert on screen if the issue is invalid credentials
                 if (response as? NSHTTPURLResponse)?.statusCode == 403{
                     performUIUpdatesOnMain({ 
-                        Alert.show("Invalid Credentials", alertMessage: "Please check the username and/or password.")
+                        Alert.show("Invalid Credentials", alertMessage: "Please check the username and/or password.", viewController: self)
                     })
                 }
                 
@@ -198,17 +198,6 @@ class NetworkClient : UIViewController {
             components.path = path
         }
         
-//        guard let parameters = parameters else {
-//            if host.containsString("parse"){
-//                print("Parse API with no parameters, potential issue")
-//            }
-//            if let url = components.URL {
-//                print(url)
-//                return url
-//            }
-//
-//        }
-        
         if let parameters = parameters{
             components.queryItems = [NSURLQueryItem]()
             
@@ -222,10 +211,6 @@ class NetworkClient : UIViewController {
             print("buildURLfailed")
             return NSURL(string: "")!
         }
-        
-        // MARK: Test code
-        print(url)
-        // end test code
         
         return url
 

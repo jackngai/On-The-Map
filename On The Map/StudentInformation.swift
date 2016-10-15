@@ -1,5 +1,5 @@
 //
-//  StudentStruct.swift
+//  StudentInformation.swift
 //  On The Map
 //
 //  Created by Jack Ngai on 9/28/16.

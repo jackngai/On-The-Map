@@ -24,14 +24,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        // MARK: Test code 
-        
-        //Will this reload the map after adding a new pin?
-        mapView.reloadInputViews()
-        
-        // end test code
-        
-        
     }
     
     
@@ -56,10 +48,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // Create a string version of {"uniqueKey":"1234"} where 1234 is the unique Key for the user
         let dictionaryString = "{\"uniqueKey\":\"\(NetworkClient.sharedInstance().user.uniqueKey)\"}"
         
-        //let percentEncodedDictString = dictionaryString.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
-    
-        
-        // Add dictionary as a value to the where key to create
+        // Add dictionaryString as a value to the where key to create
         // Ex: https://parse.udacity.com/parse/classes/StudentLocation?where={"uniqueKey":"1234"}
         parameters[Constants.Parse.ParameterKeys.Where] = dictionaryString
         
@@ -88,11 +77,17 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        print("MapView appeared")
+        mapView.removeAnnotations(annotations)
+        populateAnnotations()
+        mapView.addAnnotations(annotations)
+    }
+    
     
     @IBAction func unwindAfterAddingPin(segue: UIStoryboardSegue){
         // This is the controller that MapAndPinView will unwind to after clicking "Submit"
-        let button = UIBarButtonItem()
-        refresh(button)
     }
     
     
@@ -144,14 +139,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             annotations.append(annotation)
         }
     }
-    
-    
-    private func showAlert(alertTitle: String, alertMessage: String){
-        let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .Alert)
-        let action = UIAlertAction(title: "Okay", style: .Default, handler: nil)
-        alertController.addAction(action)
-        presentViewController(alertController, animated: true, completion: nil)
-    }
+
     
     
     // MARK: - MKMapViewDelegate

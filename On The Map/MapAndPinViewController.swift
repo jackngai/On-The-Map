@@ -49,6 +49,10 @@ class MapAndPinViewController: UIViewController {
         NetworkClient.sharedInstance().user.longitude = searchResponse!.boundingRegion.center.longitude
         NetworkClient.sharedInstance().user.mediaURL = link
         
+        // Add entry to the students array so user don't have to wait til server
+        // refresh to see their entry
+        NetworkClient.sharedInstance().students.insert(NetworkClient.sharedInstance().user, atIndex: 0)
+        
         // If Object ID is blank, create a PUT (overwrite) request, else create a POST (add new pin) request
         var request = NSMutableURLRequest()
         if NetworkClient.sharedInstance().user.objectID != ""{
@@ -63,25 +67,43 @@ class MapAndPinViewController: UIViewController {
             NetworkClient.sharedInstance().startTask("Parse", request: request, completionHandlerForTask: { (result, error) in
                 
                 guard error == nil else{
+                    Alert.show("Error", alertMessage: "Received an error trying to update or add a location", viewController: self)
                     print("Received error: \(error)")
                     return
                 }
                 
                 guard let result = result else{
+                    Alert.show("Error", alertMessage: "Did not receive any data confirming location was updated/added successfully", viewController: self)
                     print("result is nil")
                     return
                 }
    
                 if NetworkClient.sharedInstance().user.objectID != ""{
-                    print("Updated successfully on: \(result["updatedAt"])")
+                    
+                    guard let updatedAt = result["updatedAt"] as? String else {
+                        print("Unable to downcast updatedAt field from AnyObject to String")
+                        return
+                    }
+                    print("Updated successfully on: \(updatedAt)")
+                    // The intention is to wait til this field is updated before
+                    // adding user struct to the students array. But because this
+                    // is happening asynchronously, the user is back in the mapView
+                    // and there's no way to show the user their pin unless they
+                    // keep hitting refresh. So I ended up adding the user stuct 
+                    // to the students array earlier in this method.
+                    NetworkClient.sharedInstance().user.updatedAt = updatedAt
+                    
                 } else {
-                    print("New pin added on: \(result["createdAt"])")
+                    guard let createdAt = result["createdAt"] as? String else {
+                        print("Unable to downcast createdAt field from AnyObject to String")
+                        return
+                    }
+                    print("New pin added on: \(createdAt)")
+                    NetworkClient.sharedInstance().user.createdAt = createdAt
                 }
                 
+
             })
-    
-        
-        
 
     }
 

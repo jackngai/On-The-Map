@@ -42,11 +42,10 @@ class LocateViewController:UIViewController{
     // MARK: Actions
     @IBAction func find(sender: UIButton) {
         
-        
-        
         // Check to confirm location text field is not blank
-        guard let location = locationTextField.text else{
-            print("location field is nil")
+        guard locationTextField.text != "", let location = locationTextField.text else{
+            Alert.show("Error", alertMessage: "Please type in a location.", viewController: self)
+            print("location is nil.")
             return
         }
         
@@ -59,9 +58,7 @@ class LocateViewController:UIViewController{
         search.startWithCompletionHandler { (localSearchResponse, error) -> Void in
             
             guard let localSearchResponse = localSearchResponse else {
-                let alertController = UIAlertController(title: nil, message: "Place Not Found", preferredStyle: .Alert)
-                alertController.addAction(UIAlertAction(title: "Dismiss", style: .Default, handler: nil))
-                self.presentViewController(alertController, animated: true, completion: nil)
+                Alert.show("Error", alertMessage: "Place Not Found", viewController: self)
                 return
             }
             

@@ -73,6 +73,13 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
  
  
     }
+    
+    @IBAction func signUp(sender: UIButton) {
+        
+        UIApplication.sharedApplication().openURL(NSURL(string: "http://www.udacity.com")!)
+    }
+
+    
 
     // MARK: Methods
     
@@ -82,7 +89,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
         
         guard let token = FBSDKAccessToken.currentAccessToken(), let tokenString = token.tokenString else{
             ActivityIndicator.hide()
-            Alert.show("Unable to login with Facebook", alertMessage: "Did not receive access token from Facebook. Might be a network error or a FB credentials error. Please try again.")
+            Alert.show("Unable to login with Facebook", alertMessage: "Did not receive access token from Facebook. Might be a network error or a FB credentials error. Please try again.", viewController: self)
             print("No token received from Facebook")
             return
         }
@@ -148,20 +155,23 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
                 }
                 NetworkClient.sharedInstance().user.firstName = firstname
                 NetworkClient.sharedInstance().user.lastName = lastname
+                
+                // If sessionID is populated, this confirms proper commmunication with Udacity's server,
+                // allow user to access.
+                // I put this in here so the perform segue doesn't happen while the Facebook authentication
+                // view is still on screen.
+                if sessionID != ""{
+                    performUIUpdatesOnMain{
+                        self.performSegueWithIdentifier("segueToMap", sender: self)
+                        ActivityIndicator.hide()
+                    }
+                } else {
+                    ActivityIndicator.hide()
+                    Alert.show("Unable to login", alertMessage: "No session ID provided by Udacity server. Please try again.", viewController: self)
+                }
+
             })
             
-            
-            // If sessionID is populated, this confirms proper commmunication with Udacity's server,
-            // allow user to access
-            if sessionID != ""{
-                performUIUpdatesOnMain{
-                    self.performSegueWithIdentifier("segueToMap", sender: self)
-                    ActivityIndicator.hide()
-                }
-            } else {
-                ActivityIndicator.hide()
-                Alert.show("Unable to login", alertMessage: "No session ID provided by Udacity server. Please try again.")
-            }
         }
         
         

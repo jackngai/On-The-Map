@@ -13,27 +13,8 @@ struct Constants{
     // MARK: Parameter Keys
     struct ParameterKeys {
         static let ApiKey = "api_key"
-        //static let SessionID = "session_id"
-        //static let RequestToken = "request_token"
-    }
-    
-    // MARK: JSON Response Keys
-    struct JSONResponseKeys {
-        
-        // MARK: General
-        //static let StatusMessage = "status_message"
-        //static let StatusCode = "status_code"
-        
-        // MARK: Authorization
-        //static let RequestToken = "request_token"
-        //static let SessionID = "session_id"
-        
-        // MARK: Account
-        //static let UserID = "id"
-        
     }
 
-    
     struct Parse{
         static let appID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
         static let APIkey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"

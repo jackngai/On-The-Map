@@ -29,10 +29,9 @@ extension NetworkClient{
             alertController.addAction(newPinAction)
             alertController.addAction(overwriteAction)
             
-            viewController.presentViewController(alertController, animated: false, completion: nil)
-            
-
-            
+            viewController.presentViewController(alertController, animated: true, completion: nil)
+        } else {
+            viewController.performSegueWithIdentifier(segueIdentifier, sender: self)
         }
     }
     
@@ -91,7 +90,7 @@ extension NetworkClient{
             if sessionID == ""{
                 performUIUpdatesOnMain({
                     ActivityIndicator.hide()
-                    Alert.show("Logout Error", alertMessage: "Unable to delete session ID. Please try again.")
+                    Alert.show("Logout Error", alertMessage: "Unable to delete session ID. Please try again.", viewController: self)
                 })
             } else {
                 performUIUpdatesOnMain({
