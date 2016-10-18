@@ -49,6 +49,8 @@ class LocateViewController:UIViewController{
             return
         }
         
+        ActivityIndicator.show(loadingText: "Looking up location")
+        
         // Save the map string to the user's struct
         NetworkClient.sharedInstance().user.mapString = location
         
@@ -63,6 +65,7 @@ class LocateViewController:UIViewController{
             }
             
             self.searchResponse = localSearchResponse
+            ActivityIndicator.hide()
             self.performSegueWithIdentifier("segueToMapAndPin", sender: self)
         }
         

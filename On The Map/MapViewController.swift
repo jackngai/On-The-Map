@@ -19,6 +19,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // MARK: Properties
     // Create an empty array of map annotations
     var annotations = [MKPointAnnotation]()
+    let reach = Reach()
+    
     
     // MARK: View Lifecycle methods
     override func viewWillAppear(animated: Bool) {
@@ -183,6 +185,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // This delegate method is implemented to respond to taps. It opens the system browser
     // to the URL specified in the annotationViews subtitle property.
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        
+        guard reach.connectionStatus().description != "Offline" else{
+            Alert.show("Network Error", alertMessage: "Unable to communicate with server. Please try again.", viewController: self)
+            return
+        }
         
         // Safely check if the subtitle field contains a URL and open if it does
         guard control == view.rightCalloutAccessoryView else {
