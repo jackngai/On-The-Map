@@ -19,6 +19,7 @@ class MapAndPinViewController: UIViewController {
     var searchResponse:MKLocalSearchResponse!
     var pointAnnotation:MKPointAnnotation!
     var pinAnnotationView:MKPinAnnotationView!
+    let reach = Reach()
 
     // MARK: View Lifecycle methods
     override func viewDidLoad() {
@@ -36,13 +37,23 @@ class MapAndPinViewController: UIViewController {
         self.mapView.setRegion(searchResponse.boundingRegion, animated: true)
     }
     
+    
     // MARK: Actions
     @IBAction func submit(sender: AnyObject) {
         
         guard let link = linkTextField.text where link != "" else {
+            Alert.show("Link field is blank", alertMessage: "Please type in a link.", viewController: self)
             print("Link field is blank. Please type in a link.")
             return
         }
+        
+        guard reach.connectionStatus().description != "Offline" else{
+            Alert.show("Network Error", alertMessage: "Unable to communicate with server. Please try again.", viewController: self)
+            return
+        }
+        
+        
+        print(reach.connectionStatus())
         
         // Save user's coordinates and link to the student struct
         NetworkClient.sharedInstance().user.latitude = searchResponse!.boundingRegion.center.latitude
@@ -67,7 +78,8 @@ class MapAndPinViewController: UIViewController {
             NetworkClient.sharedInstance().startTask("Parse", request: request, completionHandlerForTask: { (result, error) in
                 
                 guard error == nil else{
-                    Alert.show("Error", alertMessage: "Received an error trying to update or add a location", viewController: self)
+                Alert.show("Error", alertMessage: "Received an error trying to update or add a location", viewController: self)
+                    NetworkClient.sharedInstance().postStatusCompletion = false
                     print("Received error: \(error)")
                     return
                 }
@@ -104,6 +116,20 @@ class MapAndPinViewController: UIViewController {
                 
 
             })
+        // Add activity indicator and delay so the MapAndPinViewController is not 
+        // segued out of view if there is an error with the network.
+        ActivityIndicator.show(loadingText: "Adding/Updating Pin.")
+        let seconds = 4.0
+        let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        
+        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            
+             self.performSegueWithIdentifier("unwindAfterAddingPin", sender: self)
+            
+        })
+        
+       
 
     }
 

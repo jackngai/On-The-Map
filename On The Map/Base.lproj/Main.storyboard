@@ -175,7 +175,7 @@
                         <rightBarButtonItems>
                             <barButtonItem systemItem="refresh" id="zXA-f0-Ry1">
                                 <connections>
-                                    <action selector="refresh:" destination="TyW-hs-BKr" id="Ij0-Iz-gh0"/>
+                                    <action selector="refresh" destination="TyW-hs-BKr" id="SQG-ay-17r"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem image="pin" id="2zx-Dk-tYf">
@@ -425,7 +425,6 @@
                                 </state>
                                 <connections>
                                     <action selector="submit:" destination="7UN-oe-EzW" eventType="touchUpInside" id="Qlw-He-7LB"/>
-                                    <segue destination="Qha-lT-ph1" kind="unwind" unwindAction="unwindAfterAddingPin:" id="eCv-9A-GZh"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter a Link to Share Here" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="0Qf-P7-oyE">
@@ -454,6 +453,7 @@
                     <connections>
                         <outlet property="linkTextField" destination="0Qf-P7-oyE" id="jWO-HJ-3oM"/>
                         <outlet property="mapView" destination="GO1-hQ-0C6" id="SZq-p7-gpi"/>
+                        <segue destination="Qha-lT-ph1" kind="unwind" identifier="unwindAfterAddingPin" unwindAction="unwindAfterAddingPin:" id="qEM-Ox-KvL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uao-T3-yqp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -507,6 +507,6 @@
         <image name="udacity" width="80" height="80"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="lB8-RZ-ZOJ"/>
+        <segue reference="ceN-Fh-QqX"/>
     </inferredMetricsTieBreakers>
 </document>

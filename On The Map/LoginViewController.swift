@@ -114,6 +114,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
         } else if let fbToken = fbToken{
             authenticationRequest = NetworkClient.sharedInstance().udacityPOST(fbToken: fbToken)
         } else {
+            Alert.show("Unable to login", alertMessage: "Username/password field missing or failed to retrieve Facebook access token.", viewController: self)
             print("Username/password field missing or failed to retrieve Facebook access token.")
             return
         }
@@ -124,6 +125,9 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
         NetworkClient.sharedInstance().startTask("Udacity", request: authenticationRequest) { (result, error) in
             
             guard error == nil else {
+                performUIUpdatesOnMain({
+                    Alert.show(error!.domain, alertMessage: error!.localizedDescription, viewController: self)
+                })
                 print("Error authenticating: \(error)")
                 return
             }
@@ -151,6 +155,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
             
             NetworkClient.sharedInstance().startTask("Udacity", request: getUserPublicInfoRequest, completionHandlerForTask: { (result, error) in
                 guard let user = result?["user"], let firstname = user?["first_name"] as? String, let lastname = user?["last_name"] as? String else{
+                    Alert.show("Unable to find user info", alertMessage: "Udacity server did not have user public info.", viewController: self)
                     print("Unable to find user info in parsed result.")
                     return
                 }
@@ -169,6 +174,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
                 } else {
                     ActivityIndicator.hide()
                     Alert.show("Unable to login", alertMessage: "No session ID provided by Udacity server. Please try again.", viewController: self)
+
                 }
 
             })

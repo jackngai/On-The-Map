@@ -23,6 +23,8 @@ class NetworkClient : UIViewController {
     
     var students = [StudentInformation]()
     
+    var postStatusCompletion = true
+    
     
     // MARK: GET
     
@@ -138,7 +140,16 @@ class NetworkClient : UIViewController {
                     // Display error as an alert on screen if the issue is related to internet connection
                     if error.code == -1009{
                         performUIUpdatesOnMain({
-                            Alert.show(error.domain, alertMessage: error.localizedDescription, viewController: self)
+                            ActivityIndicator.hide()
+                            
+                            // Find the top view controller and display the error message from that controller
+                            if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+                                while let presentedViewController = topController.presentedViewController {
+                                    topController = presentedViewController
+                                }
+                                
+                                Alert.show(error.domain, alertMessage: error.localizedDescription, viewController: topController)
+                            }
                         })
                     }
                 }
@@ -151,10 +162,9 @@ class NetworkClient : UIViewController {
                 print("Status code: \((response as? NSHTTPURLResponse)?.statusCode))")
                 
                 // Display status code as an alert on screen if the issue is invalid credentials
-                if (response as? NSHTTPURLResponse)?.statusCode == 403{
-                    performUIUpdatesOnMain({ 
-                        Alert.show("Invalid Credentials", alertMessage: "Please check the username and/or password.", viewController: self)
-                    })
+                if (response as? NSHTTPURLResponse)?.statusCode == 403{                    
+                    let userInfo = [NSLocalizedDescriptionKey : "Please check your login/password."]
+                    completionHandlerForTask(result: nil, error: NSError(domain: "Invalid Credentials", code: 1, userInfo: userInfo))
                 }
                 
                 return

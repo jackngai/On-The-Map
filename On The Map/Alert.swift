@@ -20,8 +20,7 @@ class Alert:UIViewController{
         
         // Hide Activity Indicator before showing the alert
         ActivityIndicator.hide()
-        
-        viewController.presentViewController(Alert.alertController, animated: true, completion: nil)
 
+        viewController.presentViewController(Alert.alertController, animated: true, completion: nil)
     }
 }

@@ -92,6 +92,7 @@ extension NetworkClient{
                 performUIUpdatesOnMain({
                     ActivityIndicator.hide()
                     Alert.show("Logout Error", alertMessage: "Unable to delete session ID. Please try again.", viewController: self)
+
                 })
             } else {
                 performUIUpdatesOnMain({

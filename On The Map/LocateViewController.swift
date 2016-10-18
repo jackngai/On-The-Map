@@ -58,7 +58,7 @@ class LocateViewController:UIViewController{
         search.startWithCompletionHandler { (localSearchResponse, error) -> Void in
             
             guard let localSearchResponse = localSearchResponse else {
-                Alert.show("Error", alertMessage: "Place Not Found", viewController: self)
+                Alert.show("Error", alertMessage: "Place not found or issue with network connection.", viewController: self)
                 return
             }
             

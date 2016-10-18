@@ -13,6 +13,7 @@
 		980F57C51DB31BB000C44CE0 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 980F57C11DB31BB000C44CE0 /* FBSDKCoreKit.framework */; };
 		980F57C61DB31BB000C44CE0 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 980F57C21DB31BB000C44CE0 /* FBSDKLoginKit.framework */; };
 		980F57C71DB31BB000C44CE0 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 980F57C31DB31BB000C44CE0 /* FBSDKShareKit.framework */; };
+		980FA3EC1DB43BFB007A7A5C /* Reach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980FA3EB1DB43BFB007A7A5C /* Reach.swift */; };
 		98107A711DAD84CE004D12EC /* NetworkConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98107A701DAD84CE004D12EC /* NetworkConvenience.swift */; };
 		9810A9451D976C2B00ABDF75 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9810A9441D976C2B00ABDF75 /* MapViewController.swift */; };
 		981125611DAE8EA900377260 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981125601DAE8EA900377260 /* ActivityIndicator.swift */; };
@@ -38,6 +39,7 @@
 		980F57C11DB31BB000C44CE0 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		980F57C21DB31BB000C44CE0 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		980F57C31DB31BB000C44CE0 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		980FA3EB1DB43BFB007A7A5C /* Reach.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reach.swift; sourceTree = "<group>"; };
 		98107A701DAD84CE004D12EC /* NetworkConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkConvenience.swift; sourceTree = "<group>"; };
 		9810A9441D976C2B00ABDF75 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		981125601DAE8EA900377260 /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				98E6F9521D9C6A510093375F /* GCDBlackBox.swift */,
 				981125601DAE8EA900377260 /* ActivityIndicator.swift */,
 				980CD1E71D9D576500185904 /* Alert.swift */,
+				980FA3EB1DB43BFB007A7A5C /* Reach.swift */,
 				98107A701DAD84CE004D12EC /* NetworkConvenience.swift */,
 				980C20F81DA02D5D00C3EBD0 /* NetworkClient.swift */,
 				98E6F9541D9C6DEA0093375F /* StudentInformation.swift */,
@@ -232,6 +235,7 @@
 				9811F8081D9EBDD900F2D123 /* MapAndPinViewController.swift in Sources */,
 				98DAB68B1D95E2F800214DDB /* AppDelegate.swift in Sources */,
 				9811F80A1D9F19AB00F2D123 /* Constants.swift in Sources */,
+				980FA3EC1DB43BFB007A7A5C /* Reach.swift in Sources */,
 				98211F0C1D9AE7EE00B12066 /* ListTableViewController.swift in Sources */,
 				981125651DAEF1CF00377260 /* HideKeyboard.swift in Sources */,
 				981125631DAECBAC00377260 /* TextFieldDelegate.swift in Sources */,

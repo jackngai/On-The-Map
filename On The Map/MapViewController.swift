@@ -30,6 +30,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        mapView.delegate = self
+        
+        // If Network issue prevented the students array from being
+        // populated during AppDelegate, try again now
+        if NetworkClient.sharedInstance().students.isEmpty{
+            refresh()
+        }
+        
 
         // Populate map annotations array with information from students array
         populateAnnotations()
@@ -38,7 +46,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // When the array is complete, we add the annotations to the map.
         self.mapView.addAnnotations(annotations)
         
-        mapView.delegate = self
+        
         
         
         // MARK: Look for any location pins placed by the current user by using the user unique key
@@ -88,6 +96,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func unwindAfterAddingPin(segue: UIStoryboardSegue){
         // This is the controller that MapAndPinView will unwind to after clicking "Submit"
+        
+        ActivityIndicator.hide()
+        
+
     }
     
     
@@ -105,13 +117,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
     }
     
-    @IBAction func refresh(sender: UIBarButtonItem) {
+    @IBAction func refresh() {
         mapView.removeAnnotations(annotations)
         NetworkClient.sharedInstance().students.removeAll(keepCapacity: false)
         NetworkClient.sharedInstance().getStudentsLocation{
             self.populateAnnotations()
         }
         mapView.addAnnotations(annotations)
+
     }
     
     private func populateAnnotations(){
